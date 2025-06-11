@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.abrosimov.financeapp"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.abrosimov.financeapp"
@@ -40,6 +40,11 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.androidx.material3.adaptive.navigation3)
+    implementation(libs.kotlinx.serialization.core)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -56,4 +61,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation ("androidx.compose.material3:material3:1.3.2")
+    implementation ("androidx.compose.material3:material3-window-size-class:1.3.2")
+    implementation ("androidx.compose.material3:material3-adaptive-navigation-suite:1.4.0-alpha15")
 }

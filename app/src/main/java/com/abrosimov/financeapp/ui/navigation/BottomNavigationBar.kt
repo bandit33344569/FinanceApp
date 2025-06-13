@@ -6,12 +6,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemColors
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.core.graphics.toColor
 import com.abrosimov.financeapp.R
 
 @Composable
@@ -25,7 +22,7 @@ fun BottomNavigationBar(
         val screens = listOf(
             AppScreen.Expenses,
             AppScreen.Income,
-            AppScreen.Check,
+            AppScreen.Account,
             AppScreen.Articles,
             AppScreen.Settings
         )
@@ -34,7 +31,7 @@ fun BottomNavigationBar(
             val iconResId = when (screen) {
                 AppScreen.Expenses -> R.drawable.ic_expenses
                 AppScreen.Income -> R.drawable.ic_income
-                AppScreen.Check -> R.drawable.ic_check
+                AppScreen.Account -> R.drawable.ic_check
                 AppScreen.Articles -> R.drawable.ic_articles
                 AppScreen.Settings -> R.drawable.ic_settings
             }
@@ -42,7 +39,7 @@ fun BottomNavigationBar(
             val label = when (screen) {
                 AppScreen.Expenses -> "Расходы"
                 AppScreen.Income -> "Доходы"
-                AppScreen.Check -> "Счет"
+                AppScreen.Account -> "Счет"
                 AppScreen.Articles -> "Статьи"
                 AppScreen.Settings -> "Настройки"
             }

@@ -10,7 +10,7 @@ sealed class AppScreen : NavKey {
     @Serializable
     data object Income : AppScreen(), NavKey
     @Serializable
-    data object Check : AppScreen(), NavKey
+    data object Account : AppScreen(), NavKey
     @Serializable
     data object Articles : AppScreen(), NavKey
     @Serializable

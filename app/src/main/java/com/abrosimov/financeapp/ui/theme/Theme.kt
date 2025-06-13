@@ -1,6 +1,5 @@
 package com.abrosimov.financeapp.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
@@ -10,10 +9,8 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
 
 private val DarkColorScheme = darkColorScheme(
     primary = GreenPrimary,
@@ -32,7 +29,7 @@ private val LightColorScheme = lightColorScheme(
     onTertiary = Color.White,
     onBackground = Color(0xFF1C1B1F),
     onSurface = Color(0xFF1C1B1F),
-    surfaceContainer = Color(0xfff3edf7)
+    surfaceContainer = Color(0xffF3EDF7)
 
 )
 
@@ -52,13 +49,6 @@ fun FinanceAppTheme(
         else -> LightColorScheme
     }
 
-    val view = LocalView.current
-    if(!view.isInEditMode){
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor
-        }
-    }
 
     MaterialTheme(
         colorScheme = colorScheme,

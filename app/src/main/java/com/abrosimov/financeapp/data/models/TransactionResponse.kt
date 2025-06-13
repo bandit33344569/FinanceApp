@@ -1,5 +1,6 @@
 package com.abrosimov.financeapp.data.models
 
+import com.abrosimov.financeapp.domain.models.AccountBrief
 import com.abrosimov.financeapp.domain.models.Category
 
 data class TransactionResponse(

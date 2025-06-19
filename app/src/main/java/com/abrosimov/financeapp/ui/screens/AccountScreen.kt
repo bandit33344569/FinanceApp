@@ -7,6 +7,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.abrosimov.financeapp.R
 import com.abrosimov.financeapp.ui.misc.CustomListItem
 
 
@@ -32,8 +33,9 @@ fun Balance() {
         rightTitle = "-670 000 ₽",
         leftIcon = "\uD83D\uDCB0",
         listBackground = MaterialTheme.colorScheme.secondary,
+        rightIcon = R.drawable.ic_drill_in,
         leftIconBackground = MaterialTheme.colorScheme.background,
-        clickable = false,
+        clickable = true,
         listHeight = 56
     )
     HorizontalDivider()
@@ -46,7 +48,8 @@ fun Currency() {
         rightTitle = "₽",
         listBackground = MaterialTheme.colorScheme.secondary,
         leftIconBackground = MaterialTheme.colorScheme.background,
-        clickable = false,
+        clickable = true,
+        rightIcon = R.drawable.ic_drill_in,
         listHeight = 56
     )
 }

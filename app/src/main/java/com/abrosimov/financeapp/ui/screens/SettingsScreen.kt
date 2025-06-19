@@ -29,6 +29,7 @@ fun SettingsScreen() {
         }
         items(settings){ setting ->
             SettingLitItem(setting)
+            HorizontalDivider()
         }
     }
 }

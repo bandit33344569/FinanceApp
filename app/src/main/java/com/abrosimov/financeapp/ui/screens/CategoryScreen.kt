@@ -65,6 +65,7 @@ fun CategoryScreen() {
         ) {
             items(categories.size) { index ->
                 CategoryListItem(categories[index])
+                HorizontalDivider()
             }
         }
     }

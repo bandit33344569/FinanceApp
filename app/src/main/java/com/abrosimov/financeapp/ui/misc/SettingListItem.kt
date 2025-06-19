@@ -12,6 +12,7 @@ fun SettingLitItem(setting: Setting){
         rightIcon = R.drawable.ic_details,
         listBackground = MaterialTheme.colorScheme.background,
         clickable = true,
-        onClick = setting.onClick
+        onClick = setting.onClick,
+        listHeight = 56
     )
 }

@@ -1,6 +1,6 @@
 package com.abrosimov.financeapp.ui.navigation
 
-import androidx.compose.foundation.layout.RowScope
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -8,21 +8,20 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.abrosimov.financeapp.R
-import com.abrosimov.financeapp.ui.screens.ArticlesScreen
+import com.abrosimov.financeapp.ui.screens.CategoryScreen
 import com.abrosimov.financeapp.ui.screens.AccountScreen
 import com.abrosimov.financeapp.ui.screens.ExpensesScreen
 import com.abrosimov.financeapp.ui.screens.IncomeScreen
@@ -32,7 +31,7 @@ import com.abrosimov.financeapp.ui.screens.SettingsScreen
 @Composable
 fun NavigationRoot(modifier: Modifier = Modifier) {
     val backStack = rememberNavBackStack(AppScreen.Expenses)
-    val currentScreen = backStack.lastOrNull() as AppScreen? ?: AppScreen.Expenses
+    var currentScreen = backStack.lastOrNull() as AppScreen? ?: AppScreen.Expenses
     val screenConfig = getScreenConfig(currentScreen)
 
     Scaffold(
@@ -40,8 +39,17 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
             BottomNavigationBar(
                 currentScreen = currentScreen,
                 onNavigate = { screen ->
-                    if (currentScreen != screen) {
-                        backStack.add(screen)
+                    if (backStack.lastOrNull() != screen) {
+                        Log.i("backstack","$backStack")
+                        if (screen in backStack) {
+                            val newStack = backStack.toMutableList()
+                            newStack.remove(screen)
+                            newStack.add(screen)
+                            backStack.clear()
+                            newStack.forEach { backStack.add(it) }
+                        } else {
+                            backStack.add(screen)
+                        }
                     }
                 }
             )
@@ -66,7 +74,10 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
                         Icon(Icons.Filled.Add, "Добавить")
                     },
                     containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.background
+                    contentColor = MaterialTheme.colorScheme.background,
+                    elevation = FloatingActionButtonDefaults.elevation(
+                        defaultElevation = 0.dp
+                    )
                 )
             }
         }
@@ -74,6 +85,7 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
         NavDisplay(
             modifier = Modifier.padding(innerPadding),
             backStack = backStack,
+            onBack = {backStack.removeLastOrNull()},
             entryProvider = entryProvider {
                 entry<AppScreen.Expenses> {
                     ExpensesScreen()
@@ -88,7 +100,7 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
                 }
 
                 entry<AppScreen.Articles> {
-                    ArticlesScreen()
+                    CategoryScreen()
                 }
 
                 entry<AppScreen.Settings> {
@@ -100,71 +112,3 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
 
 }
 
-data class ScreenConfig(
-    val title: String,
-    val navigationIcon: @Composable () -> Unit = {},
-    val actions: @Composable RowScope.() -> Unit = {},
-    val fabVisibility: Boolean = false,
-    val fabOnClick: (() -> Unit)? = null
-)
-
-fun getScreenConfig(screen: AppScreen): ScreenConfig = when (screen) {
-    AppScreen.Expenses -> ScreenConfig(
-        title = "Расходы сегодня",
-        navigationIcon = { },
-        actions = {
-            IconButton(onClick = { }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_history),
-                    contentDescription = "История"
-                )
-            }
-        },
-        fabVisibility = true,
-        fabOnClick = {},
-    )
-
-    AppScreen.Income -> ScreenConfig(
-        title = "Доходы сегодня",
-        navigationIcon = { },
-        actions = {
-            IconButton(onClick = { }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_history),
-                    contentDescription = "История"
-                )
-            }
-        },
-        fabVisibility = true,
-        fabOnClick = {},
-    )
-
-    AppScreen.Settings -> ScreenConfig(
-        title = "Настройки",
-        navigationIcon = { },
-        actions = {
-        }
-    )
-
-    AppScreen.Articles -> ScreenConfig(
-        title = "Мои статьи",
-        navigationIcon = { },
-        actions = {
-        }
-    )
-
-    AppScreen.Account -> ScreenConfig(
-        title = "Мой счет",
-        navigationIcon = { },
-        actions = {
-            IconButton(onClick = { }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_edit),
-                    contentDescription = "Редактировать"
-                )
-            }
-        },
-        fabVisibility = true,
-        fabOnClick = {},
-    )
-}

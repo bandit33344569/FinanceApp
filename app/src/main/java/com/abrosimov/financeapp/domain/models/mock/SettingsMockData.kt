@@ -5,12 +5,6 @@ import com.abrosimov.financeapp.domain.models.Setting
 object SettingsMockData {
     fun getSettings(): List<Setting> = listOf(
         Setting(
-            title = "Тёмная тема",
-            isSwitchable = true,
-            switchState = false,
-            onClick = { }
-        ),
-        Setting(
             title = "Основной цвет",
             onClick = { }
         ),

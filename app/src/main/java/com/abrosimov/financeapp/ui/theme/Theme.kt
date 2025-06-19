@@ -36,7 +36,7 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun FinanceAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -57,5 +57,3 @@ fun FinanceAppTheme(
     )
 }
 
-val ColorScheme.statusBarColor: Color
-    get() = this.primary

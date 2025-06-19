@@ -9,6 +9,6 @@ data class Expense(
     val subtitle: String? = null,
     val createdAt: String,
     val trailTag: String,
-    val trailText: String,
+    val amount: String,
     val iconTag: String,
 )

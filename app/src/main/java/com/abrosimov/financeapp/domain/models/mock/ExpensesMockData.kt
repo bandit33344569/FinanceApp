@@ -9,7 +9,7 @@ object ExpensesMockData {
             title = "Аренда квартиры",
             createdAt = "2024-02-25T14:30:00",
             trailTag = "Сумма",
-            trailText = "100 000 ₽",
+            amount = "100 000 ₽",
             iconTag = "\uD83C\uDFE0"
         ),
         Expense(
@@ -17,7 +17,7 @@ object ExpensesMockData {
             title = "Одежда",
             createdAt = "2024-02-24T10:15:00",
             trailTag = "Сумма",
-            trailText = "100 000 ₽",
+            amount = "100 000 ₽",
             iconTag = "\uD83D\uDC57"
         ),
         Expense(
@@ -26,7 +26,7 @@ object ExpensesMockData {
             subtitle = "Джек",
             createdAt = "2024-02-23T18:45:00",
             trailTag = "Сумма",
-            trailText = "100 000 ₽",
+            amount = "100 000 ₽",
             iconTag = "\uD83D\uDC36"
         ),
         Expense(
@@ -34,7 +34,7 @@ object ExpensesMockData {
             title = "Ремонт квартиры",
             createdAt = "2024-02-22T12:20:00",
             trailTag = "Сумма",
-            trailText = "100 000 ₽",
+            amount = "100 000 ₽",
             iconTag = "\uD83D\uDEE0\uFE0F"
         ),
         Expense(
@@ -42,7 +42,7 @@ object ExpensesMockData {
             title = "Продукты",
             createdAt = "2024-02-21T09:30:00",
             trailTag = "Сумма",
-            trailText = "100 000 ₽",
+            amount = "100 000 ₽",
             iconTag = "\uD83D\uDED2"
         ),
         Expense(
@@ -50,7 +50,7 @@ object ExpensesMockData {
             title = "Спортзал",
             createdAt = "2024-02-20T16:00:00",
             trailTag = "Сумма",
-            trailText = "100 000 ₽",
+            amount = "100 000 ₽",
             iconTag = "\uD83C\uDFCB\uD83C\uDFFD"
         ),
         Expense(
@@ -58,7 +58,15 @@ object ExpensesMockData {
             title = "Медицина",
             createdAt = "2024-02-19T14:45:00",
             trailTag = "Сумма",
-            trailText = "100 000 ₽",
+            amount = "100 000 ₽",
+            iconTag = "\uD83D\uDC8A"
+        ),
+        Expense(
+            id = "8",
+            title = "Медицина",
+            createdAt = "2024-02-19T14:45:00",
+            trailTag = "Сумма",
+            amount = "100 000 ₽",
             iconTag = "\uD83D\uDC8A"
         ),
         Expense(
@@ -66,15 +74,7 @@ object ExpensesMockData {
             title = "Медицина",
             createdAt = "2024-02-19T14:45:00",
             trailTag = "Сумма",
-            trailText = "100 000 ₽",
-            iconTag = "\uD83D\uDC8A"
-        ),
-        Expense(
-            id = "9",
-            title = "Медицина",
-            createdAt = "2024-02-19T14:45:00",
-            trailTag = "Сумма",
-            trailText = "100 000 ₽",
+            amount = "100 000 ₽",
             iconTag = "\uD83D\uDC8A"
         )
     )

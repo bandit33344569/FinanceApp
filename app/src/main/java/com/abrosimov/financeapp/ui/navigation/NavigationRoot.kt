@@ -17,23 +17,26 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.abrosimov.financeapp.ui.FinanceViewModel
 import com.abrosimov.financeapp.ui.screens.CategoryScreen
 import com.abrosimov.financeapp.ui.screens.AccountScreen
 import com.abrosimov.financeapp.ui.screens.ExpensesScreen
+import com.abrosimov.financeapp.ui.screens.HistoryScreen
 import com.abrosimov.financeapp.ui.screens.IncomeScreen
 import com.abrosimov.financeapp.ui.screens.SettingsScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationRoot(modifier: Modifier = Modifier) {
-    val backStack = rememberNavBackStack(AppScreen.Expenses)
-    var currentScreen = backStack.lastOrNull() as AppScreen? ?: AppScreen.Expenses
+    val backStack = rememberNavBackStack(MainAppScreen.Expenses)
+    var currentScreen = backStack.lastOrNull() as MainAppScreen? ?: MainAppScreen.Expenses
     val screenConfig = getScreenConfig(currentScreen)
-
+    val viewModel: FinanceViewModel  = hiltViewModel()
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
@@ -87,24 +90,28 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
             backStack = backStack,
             onBack = {backStack.removeLastOrNull()},
             entryProvider = entryProvider {
-                entry<AppScreen.Expenses> {
-                    ExpensesScreen()
+                entry<MainAppScreen.Expenses> {
+                    ExpensesScreen(viewModel)
                 }
 
-                entry<AppScreen.Income> {
-                    IncomeScreen()
+                entry<MainAppScreen.Income> {
+                    IncomeScreen(viewModel)
                 }
 
-                entry<AppScreen.Account> {
-                    AccountScreen()
+                entry<MainAppScreen.Account> {
+                    AccountScreen(viewModel)
                 }
 
-                entry<AppScreen.Articles> {
-                    CategoryScreen()
+                entry<MainAppScreen.Articles> {
+                    CategoryScreen(viewModel)
                 }
 
-                entry<AppScreen.Settings> {
+                entry<MainAppScreen.Settings> {
                     SettingsScreen()
+                }
+
+                entry <History>{
+                    HistoryScreen()
                 }
             }
         )

@@ -1,20 +1,18 @@
-package com.abrosimov.financeapp.ui.misc
+package com.abrosimov.financeapp.ui.lists
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import com.abrosimov.financeapp.R
-import com.abrosimov.financeapp.ui.models.Expense
+import com.abrosimov.financeapp.ui.models.Income
 
 @Composable
-fun ExpenseListItem(
-    expense: Expense,
-    onDetailClick: () -> Unit = {}
-) {
+fun IncomeListItem(
+    income: Income,
+    onDetailClick: () -> Unit
+){
     CustomListItem(
-        leftTitle = expense.title,
-        leftSubtitle = expense.subtitle,
-        rightTitle = expense.amount,
-        leftIcon = expense.iconTag,
+        leftTitle = income.source,
+        rightTitle = income.amount + " " + income.currency,
         rightIcon = R.drawable.ic_drill_in,
         listBackground = MaterialTheme.colorScheme.background,
         leftIconBackground = MaterialTheme.colorScheme.secondary,

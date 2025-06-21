@@ -1,4 +1,4 @@
-package com.abrosimov.financeapp.data.models
+package com.abrosimov.financeapp.data.models.Request
 
 data class TransactionRequest(
     val accountId: Int,

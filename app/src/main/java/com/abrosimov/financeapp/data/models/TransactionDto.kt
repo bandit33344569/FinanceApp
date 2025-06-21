@@ -1,8 +1,6 @@
-package com.abrosimov.financeapp.domain.models
+package com.abrosimov.financeapp.data.models
 
-import com.abrosimov.financeapp.ui.models.Income
-
-data class Transaction(
+data class TransactionDto(
     val id: Int,
     val accountId: Int,
     val categoryId: Int,

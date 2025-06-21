@@ -1,6 +1,6 @@
-package com.abrosimov.financeapp.domain.models
+package com.abrosimov.financeapp.data.models
 
-data class StatItem(
+data class StatItemDto(
     val categoryId: Int,
     val categoryName: String,
     val emoji: String,

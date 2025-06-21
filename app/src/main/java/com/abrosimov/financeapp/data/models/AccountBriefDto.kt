@@ -1,6 +1,6 @@
-package com.abrosimov.financeapp.domain.models
+package com.abrosimov.financeapp.data.models
 
-data class AccountState(
+data class AccountBriefDto(
     val id: Int,
     val name: String,
     val balance: String,

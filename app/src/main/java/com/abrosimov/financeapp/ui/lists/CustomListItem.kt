@@ -1,4 +1,4 @@
-package com.abrosimov.financeapp.ui.misc
+package com.abrosimov.financeapp.ui.lists
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

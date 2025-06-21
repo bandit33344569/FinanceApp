@@ -1,4 +1,4 @@
-package com.abrosimov.financeapp.data.models
+package com.abrosimov.financeapp.data.models.Response
 
 import com.abrosimov.financeapp.domain.models.StatItem
 
@@ -12,4 +12,3 @@ data class AccountResponse(
     val createdAt: String,
     val updatedAt: String
 )
-

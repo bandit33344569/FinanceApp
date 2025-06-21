@@ -1,4 +1,4 @@
-package com.abrosimov.financeapp.ui.misc
+package com.abrosimov.financeapp.ui.lists
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable

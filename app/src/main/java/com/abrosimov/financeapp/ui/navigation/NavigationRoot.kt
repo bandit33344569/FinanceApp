@@ -1,6 +1,5 @@
 package com.abrosimov.financeapp.ui.navigation
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -18,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -34,26 +34,27 @@ import com.abrosimov.financeapp.ui.screens.SettingsScreen
 @Composable
 fun NavigationRoot(modifier: Modifier = Modifier) {
     val backStack = rememberNavBackStack(MainAppScreen.Expenses)
-    var currentScreen = backStack.lastOrNull() as MainAppScreen? ?: MainAppScreen.Expenses
-    val screenConfig = getScreenConfig(currentScreen)
-    val viewModel: FinanceViewModel  = hiltViewModel()
+    var currentScreen = backStack.lastOrNull() as NavKey
+    val screenConfig = when (currentScreen) {
+        is HistoryType -> getScreenConfig(
+            currentScreen,
+            navigateBack = { backStack.removeLastOrNull() })
+
+        else -> getScreenConfig(
+            currentScreen,
+            navigateToHistoryExpense = { backStack.add(HistoryType.Expenses) },
+            navigateToHistoryIncome = { backStack.add(HistoryType.Income) })
+    }
+    val viewModel: FinanceViewModel = hiltViewModel()
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
                 currentScreen = currentScreen,
                 onNavigate = { screen ->
-                    if (backStack.lastOrNull() != screen) {
-                        Log.i("backstack","$backStack")
-                        if (screen in backStack) {
-                            val newStack = backStack.toMutableList()
-                            newStack.remove(screen)
-                            newStack.add(screen)
-                            backStack.clear()
-                            newStack.forEach { backStack.add(it) }
-                        } else {
-                            backStack.add(screen)
-                        }
+                    if (screen in backStack) {
+                        backStack.removeAll { it == screen }
                     }
+                    backStack.add(screen)
                 }
             )
         },
@@ -88,7 +89,7 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
         NavDisplay(
             modifier = Modifier.padding(innerPadding),
             backStack = backStack,
-            onBack = {backStack.removeLastOrNull()},
+            onBack = { backStack.removeLastOrNull() },
             entryProvider = entryProvider {
                 entry<MainAppScreen.Expenses> {
                     ExpensesScreen(viewModel)
@@ -110,8 +111,11 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
                     SettingsScreen()
                 }
 
-                entry <History>{
-                    HistoryScreen()
+                entry<HistoryType.Expenses> {
+                    HistoryScreen(viewModel, HistoryType.Expenses)
+                }
+                entry<HistoryType.Income> {
+                    HistoryScreen(viewModel, HistoryType.Income)
                 }
             }
         )

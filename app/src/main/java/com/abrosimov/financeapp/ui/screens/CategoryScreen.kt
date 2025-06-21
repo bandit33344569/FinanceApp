@@ -20,6 +20,7 @@ import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -39,7 +40,7 @@ import com.abrosimov.financeapp.ui.lists.CategoryListItem
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryScreen(viewModel: FinanceViewModel) {
-    val searchQuery = viewModel.searchQuery.collectAsState()
+    LaunchedEffect(Unit) { viewModel.loadCategories() }
     val state = viewModel.filteredCategoriesWithResource.collectAsState()
     val searchBarState = rememberSearchBarState()
     val textFieldState = rememberTextFieldState()

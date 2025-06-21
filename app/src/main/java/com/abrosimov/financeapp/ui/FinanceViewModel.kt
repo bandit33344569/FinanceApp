@@ -7,7 +7,6 @@ import com.abrosimov.financeapp.domain.models.Account
 import com.abrosimov.financeapp.domain.models.Category
 import com.abrosimov.financeapp.domain.models.SpecTransaction
 import com.abrosimov.financeapp.domain.repo.Resource
-import com.abrosimov.financeapp.domain.repo.map
 import com.abrosimov.financeapp.domain.usecase.GetAccountUseCase
 import com.abrosimov.financeapp.domain.usecase.GetCategoriesUseCase
 import com.abrosimov.financeapp.domain.usecase.GetTransactionsUseCase
@@ -21,11 +20,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.sql.Date
+import com.abrosimov.financeapp.ui.models.DateRange
+import kotlinx.coroutines.flow.update
+import java.util.Date
 
 /**
  * ViewModel планирую потом разделить на модели для каждого экрана, пока что так
@@ -82,17 +82,10 @@ class FinanceViewModel @Inject constructor(
 
     private val _todayTransactions =
         MutableStateFlow<Resource<List<SpecTransaction>>>(Resource.Loading)
-    val todayTransactions: StateFlow<Resource<List<SpecTransaction>>> = _todayTransactions
 
     private val _historyTransactions =
         MutableStateFlow<Resource<List<SpecTransaction>>>(Resource.Loading)
-    val historyTransactions: StateFlow<Resource<List<SpecTransaction>>> = _historyTransactions
 
-
-    init {
-        loadAccount()
-        loadCategories()
-    }
 
     fun loadAccount() {
         viewModelScope.launch {
@@ -109,15 +102,39 @@ class FinanceViewModel @Inject constructor(
         }
     }
 
-    fun loadHistoryTransactions(startDate: Date, endDate: Date){
+    fun loadHistoryTransactions() {
         viewModelScope.launch {
-            val startDate = DateUtils.dateToServerFormat(startDate)
-            val endDate = DateUtils.dateToServerFormat(endDate)
-            _historyTransactions.value = getTransactionsUseCase(10,startDate,endDate)
+            val dateRange = _dateRange.value
+            val startDateStr = DateUtils.dateToServerFormat(dateRange.start)
+            val endDateStr = DateUtils.dateToServerFormat(dateRange.end)
+
+            _historyTransactions.value = Resource.Loading
+            _historyTransactions.value =
+                getTransactionsUseCase(accountId = 10, startDateStr, endDateStr)
         }
     }
 
-    val historyExpensesOnly = _historyTransactions.map { resource ->
+    private val _dateRange = MutableStateFlow(
+        DateRange(
+            DateUtils.getStartOfMonth(DateUtils.today()),
+            DateUtils.getEndOfDay(DateUtils.today())
+        )
+
+    )
+    val dateRange: StateFlow<DateRange> get() = _dateRange
+
+    fun updateDateRange(start: Date, end: Date) {
+        _dateRange.value = DateRange(start, end)
+    }
+    fun updateStartDate(date: Date) {
+        _dateRange.update { it.copy(start = date) }
+    }
+
+    fun updateEndDate(date: Date) {
+        _dateRange.update { it.copy(end = date) }
+    }
+
+    val historyExpensesSummary = _historyTransactions.map { resource ->
         when (resource) {
             is Resource.Loading -> Resource.Loading
             is Resource.Error -> Resource.Error(resource.message)
@@ -125,8 +142,15 @@ class FinanceViewModel @Inject constructor(
                 val filteredAndMapped = resource.data
                     .filter { it.category.isIncome == false }
                     .map { it.toExpense() }
+                    .sortedByDescending {
+                        DateUtils.isoStringToDate(it.createdAt).time
+                    }
 
-                Resource.Success(filteredAndMapped)
+                val currency =
+                    if (filteredAndMapped.isNotEmpty()) filteredAndMapped[0].currency else "₽"
+                val totalAmount = filteredAndMapped.sumOf { it.amount.toDouble() }
+
+                Resource.Success(ExpensesSummary(filteredAndMapped, totalAmount, currency))
             }
         }
     }.stateIn(
@@ -135,16 +159,23 @@ class FinanceViewModel @Inject constructor(
         Resource.Loading
     )
 
-    val historyIncomesOnly = _historyTransactions.map { resource ->
+    val historyIncomesSummary = _historyTransactions.map { resource ->
         when (resource) {
             is Resource.Loading -> Resource.Loading
             is Resource.Error -> Resource.Error(resource.message)
             is Resource.Success -> {
                 val filteredAndMapped = resource.data
                     .filter { it.category.isIncome == true }
-                    .map { it.toExpense() }
+                    .map { it.toIncome() }
+                    .sortedByDescending {
+                        DateUtils.isoStringToDate(it.createdAt).time
+                    }
 
-                Resource.Success(filteredAndMapped)
+                val currency =
+                    if (filteredAndMapped.isNotEmpty()) filteredAndMapped[0].currency else "₽"
+                val totalAmount = filteredAndMapped.sumOf { it.amount.toDouble() }
+
+                Resource.Success(IncomesSummary(filteredAndMapped, totalAmount, currency))
             }
         }
     }.stateIn(
@@ -153,12 +184,12 @@ class FinanceViewModel @Inject constructor(
         Resource.Loading
     )
 
-    fun loadTodayTransactions(){
+    fun loadTodayTransactions() {
         viewModelScope.launch {
             val now = DateUtils.today()
-            val startDate = "2025-06-19"//DateUtils.dateToServerFormat(DateUtils.getStartOfDay(now))
-            val endDate = "2025-06-23"//DateUtils.dateToServerFormat(DateUtils.getEndOfDay(now))
-            _todayTransactions.value = getTransactionsUseCase(10,startDate,endDate)
+            val startDate = DateUtils.dateToServerFormat(DateUtils.getStartOfDay(now))
+            val endDate = DateUtils.dateToServerFormat(DateUtils.getEndOfDay(now))
+            _todayTransactions.value = getTransactionsUseCase(10, startDate, endDate)
         }
     }
 
@@ -171,7 +202,8 @@ class FinanceViewModel @Inject constructor(
                 val filteredAndMapped = resource.data
                     .filter { it.category.isIncome == false }
                     .map { it.toExpense() }
-                val currency = if (filteredAndMapped.isNotEmpty()) filteredAndMapped[0].currency else "₽"
+                val currency =
+                    if (filteredAndMapped.isNotEmpty()) filteredAndMapped[0].currency else "₽"
                 val totalAmount = filteredAndMapped.sumOf { it.amount.toDouble() }
 
                 Resource.Success(ExpensesSummary(filteredAndMapped, totalAmount, currency))
@@ -191,7 +223,8 @@ class FinanceViewModel @Inject constructor(
                 val filteredAndMapped = resource.data
                     .filter { it.category.isIncome == true }
                     .map { it.toIncome() }
-                val currency = if (filteredAndMapped.isNotEmpty()) filteredAndMapped[0].currency else "₽"
+                val currency =
+                    if (filteredAndMapped.isNotEmpty()) filteredAndMapped[0].currency else "₽"
                 val totalAmount = filteredAndMapped.sumOf { it.amount.toDouble() }
 
                 Resource.Success(IncomesSummary(filteredAndMapped, totalAmount, currency))

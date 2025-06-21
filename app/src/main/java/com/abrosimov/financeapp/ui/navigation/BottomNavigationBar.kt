@@ -13,12 +13,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.navigation3.runtime.NavKey
 import com.abrosimov.financeapp.R
 
 @Composable
 fun BottomNavigationBar(
-    currentScreen: MainAppScreen,
-    onNavigate: (MainAppScreen) -> Unit
+    currentScreen: NavKey,
+    onNavigate: (NavKey) -> Unit
 ) {
     NavigationBar(
         modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars),
@@ -71,9 +72,9 @@ fun BottomNavigationBar(
  */
 @Composable
 fun RowScope.AddNavigationItem(
-    screen: MainAppScreen,
-    currentScreen: MainAppScreen,
-    onNavigate: (MainAppScreen) -> Unit,
+    screen: NavKey,
+    currentScreen: NavKey,
+    onNavigate: (NavKey) -> Unit,
     iconResId: Int,
     label: String,
     colors: NavigationBarItemColors = NavigationBarItemColors(

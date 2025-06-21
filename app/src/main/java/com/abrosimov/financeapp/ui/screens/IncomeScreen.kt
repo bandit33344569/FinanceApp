@@ -9,16 +9,16 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import com.abrosimov.financeapp.domain.repo.Resource
 import com.abrosimov.financeapp.ui.FinanceViewModel
 import com.abrosimov.financeapp.ui.lists.ExpensesAndIncomeHeader
 import com.abrosimov.financeapp.ui.lists.IncomeListItem
-import com.abrosimov.financeapp.ui.models.Income
 
 @Composable
 fun IncomeScreen(viewModel: FinanceViewModel) {
-    viewModel.loadTodayTransactions()
+    LaunchedEffect(Unit) { viewModel.loadTodayTransactions()}
     val state = viewModel.todayIncomesSummary.collectAsState()
     when (val res = state.value) {
         is Resource.Error -> {

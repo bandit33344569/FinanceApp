@@ -10,18 +10,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import com.abrosimov.financeapp.domain.models.SpecTransaction
 import com.abrosimov.financeapp.domain.repo.Resource
 import com.abrosimov.financeapp.ui.FinanceViewModel
 import com.abrosimov.financeapp.ui.lists.ExpenseListItem
 import com.abrosimov.financeapp.ui.lists.ExpensesAndIncomeHeader
-import com.abrosimov.financeapp.ui.models.Expense
-import com.abrosimov.financeapp.ui.models.mappers.toExpense
 
 
 @Composable
 fun ExpensesScreen(viewModel: FinanceViewModel) {
-    viewModel.loadTodayTransactions()
+    LaunchedEffect(Unit) { viewModel.loadTodayTransactions()}
     val state = viewModel.todayExpensesSummary.collectAsState()
     when (val res = state.value) {
         is Resource.Error -> {

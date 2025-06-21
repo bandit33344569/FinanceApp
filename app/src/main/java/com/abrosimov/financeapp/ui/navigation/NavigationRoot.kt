@@ -1,6 +1,5 @@
 package com.abrosimov.financeapp.ui.navigation
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -17,40 +16,45 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.abrosimov.financeapp.ui.FinanceViewModel
 import com.abrosimov.financeapp.ui.screens.CategoryScreen
 import com.abrosimov.financeapp.ui.screens.AccountScreen
 import com.abrosimov.financeapp.ui.screens.ExpensesScreen
+import com.abrosimov.financeapp.ui.screens.HistoryScreen
 import com.abrosimov.financeapp.ui.screens.IncomeScreen
 import com.abrosimov.financeapp.ui.screens.SettingsScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationRoot(modifier: Modifier = Modifier) {
-    val backStack = rememberNavBackStack(AppScreen.Expenses)
-    var currentScreen = backStack.lastOrNull() as AppScreen? ?: AppScreen.Expenses
-    val screenConfig = getScreenConfig(currentScreen)
+    val backStack = rememberNavBackStack(MainAppScreen.Expenses)
+    var currentScreen = backStack.lastOrNull() as NavKey
+    val screenConfig = when (currentScreen) {
+        is HistoryType -> getScreenConfig(
+            currentScreen,
+            navigateBack = { backStack.removeLastOrNull() })
 
+        else -> getScreenConfig(
+            currentScreen,
+            navigateToHistoryExpense = { backStack.add(HistoryType.Expenses) },
+            navigateToHistoryIncome = { backStack.add(HistoryType.Income) })
+    }
+    val viewModel: FinanceViewModel = hiltViewModel()
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
                 currentScreen = currentScreen,
                 onNavigate = { screen ->
-                    if (backStack.lastOrNull() != screen) {
-                        Log.i("backstack","$backStack")
-                        if (screen in backStack) {
-                            val newStack = backStack.toMutableList()
-                            newStack.remove(screen)
-                            newStack.add(screen)
-                            backStack.clear()
-                            newStack.forEach { backStack.add(it) }
-                        } else {
-                            backStack.add(screen)
-                        }
+                    if (screen in backStack) {
+                        backStack.removeAll { it == screen }
                     }
+                    backStack.add(screen)
                 }
             )
         },
@@ -85,26 +89,33 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
         NavDisplay(
             modifier = Modifier.padding(innerPadding),
             backStack = backStack,
-            onBack = {backStack.removeLastOrNull()},
+            onBack = { backStack.removeLastOrNull() },
             entryProvider = entryProvider {
-                entry<AppScreen.Expenses> {
-                    ExpensesScreen()
+                entry<MainAppScreen.Expenses> {
+                    ExpensesScreen(viewModel)
                 }
 
-                entry<AppScreen.Income> {
-                    IncomeScreen()
+                entry<MainAppScreen.Income> {
+                    IncomeScreen(viewModel)
                 }
 
-                entry<AppScreen.Account> {
-                    AccountScreen()
+                entry<MainAppScreen.Account> {
+                    AccountScreen(viewModel)
                 }
 
-                entry<AppScreen.Articles> {
-                    CategoryScreen()
+                entry<MainAppScreen.Articles> {
+                    CategoryScreen(viewModel)
                 }
 
-                entry<AppScreen.Settings> {
+                entry<MainAppScreen.Settings> {
                     SettingsScreen()
+                }
+
+                entry<HistoryType.Expenses> {
+                    HistoryScreen(viewModel, HistoryType.Expenses)
+                }
+                entry<HistoryType.Income> {
+                    HistoryScreen(viewModel, HistoryType.Income)
                 }
             }
         )

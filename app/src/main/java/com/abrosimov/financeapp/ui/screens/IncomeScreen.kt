@@ -4,33 +4,49 @@ package com.abrosimov.financeapp.ui.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import com.abrosimov.financeapp.ui.misc.ExpensesAndIncomeHeader
-import com.abrosimov.financeapp.ui.misc.IncomeListItem
-import com.abrosimov.financeapp.ui.models.Income
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import com.abrosimov.financeapp.domain.repo.Resource
+import com.abrosimov.financeapp.ui.FinanceViewModel
+import com.abrosimov.financeapp.ui.lists.ExpensesAndIncomeHeader
+import com.abrosimov.financeapp.ui.lists.IncomeListItem
 
 @Composable
-fun IncomeScreen() {
-    val incomes: List<Income> = listOf(
-        Income(
-            id = "1",
-            amount = "500 000 ₽",
-            source = "Зарплата"
-        ),
-        Income(
-            id = "2",
-            amount = "100 000 ₽",
-            source = "Подработка"
-        )
-    )
-    Column {
-        ExpensesAndIncomeHeader("-600 000 ₽")
-        LazyColumn {
-            items(incomes) { income ->
-                IncomeListItem(
-                    income,
-                    onDetailClick = {}
-                )
+fun IncomeScreen(viewModel: FinanceViewModel) {
+    LaunchedEffect(Unit) { viewModel.loadTodayTransactions()}
+    val state = viewModel.todayIncomesSummary.collectAsState()
+    when (val res = state.value) {
+        is Resource.Error -> {
+            Column {
+                Text("Ошибка: ${(state.value as Resource.Error).message}")
+                Button(onClick = viewModel::loadTodayTransactions) {
+                    Text("Повторить")
+                }
+            }
+        }
+
+        Resource.Loading -> CircularProgressIndicator()
+        is Resource.Success -> {
+            val summary = res.data
+            val incomes = summary.incomes
+            val totalAmount = summary.totalAmount
+            val currency = summary.currency
+            Column {
+                ExpensesAndIncomeHeader("$totalAmount $currency")
+                LazyColumn {
+                    items(incomes) { income ->
+                        IncomeListItem(
+                            income,
+                            onDetailClick = {}
+                        )
+                        HorizontalDivider()
+                    }
+                }
             }
         }
     }

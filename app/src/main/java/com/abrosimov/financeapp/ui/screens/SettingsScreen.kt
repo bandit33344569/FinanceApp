@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.abrosimov.financeapp.domain.models.Setting
 import com.abrosimov.financeapp.domain.models.mock.SettingsMockData
-import com.abrosimov.financeapp.ui.misc.SettingLitItem
+import com.abrosimov.financeapp.ui.lists.SettingLitItem
 
 @Composable
 fun SettingsScreen() {
@@ -29,6 +29,7 @@ fun SettingsScreen() {
         }
         items(settings){ setting ->
             SettingLitItem(setting)
+            HorizontalDivider()
         }
     }
 }

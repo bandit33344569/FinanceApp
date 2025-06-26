@@ -13,40 +13,41 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.navigation3.runtime.NavKey
 import com.abrosimov.financeapp.R
 
 @Composable
 fun BottomNavigationBar(
-    currentScreen: AppScreen,
-    onNavigate: (AppScreen) -> Unit
+    currentScreen: NavKey,
+    onNavigate: (NavKey) -> Unit
 ) {
     NavigationBar(
         modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars),
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
     ) {
         val screens = listOf(
-            AppScreen.Expenses,
-            AppScreen.Income,
-            AppScreen.Account,
-            AppScreen.Articles,
-            AppScreen.Settings
+            MainAppScreen.Expenses,
+            MainAppScreen.Income,
+            MainAppScreen.Account,
+            MainAppScreen.Articles,
+            MainAppScreen.Settings
         )
 
-        screens.forEach { screen ->
+        screens.forEach { screen : MainAppScreen ->
             val iconResId = when (screen) {
-                AppScreen.Expenses -> R.drawable.ic_expenses
-                AppScreen.Income -> R.drawable.ic_income
-                AppScreen.Account -> R.drawable.ic_check
-                AppScreen.Articles -> R.drawable.ic_articles
-                AppScreen.Settings -> R.drawable.ic_settings
+                MainAppScreen.Expenses -> R.drawable.ic_expenses
+                MainAppScreen.Income -> R.drawable.ic_income
+                MainAppScreen.Account -> R.drawable.ic_check
+                MainAppScreen.Articles -> R.drawable.ic_articles
+                MainAppScreen.Settings -> R.drawable.ic_settings
             }
 
             val label = when (screen) {
-                AppScreen.Expenses -> "Расходы"
-                AppScreen.Income -> "Доходы"
-                AppScreen.Account -> "Счет"
-                AppScreen.Articles -> "Статьи"
-                AppScreen.Settings -> "Настройки"
+                MainAppScreen.Expenses -> "Расходы"
+                MainAppScreen.Income -> "Доходы"
+                MainAppScreen.Account -> "Счет"
+                MainAppScreen.Articles -> "Статьи"
+                MainAppScreen.Settings -> "Настройки"
             }
 
             AddNavigationItem(
@@ -71,9 +72,9 @@ fun BottomNavigationBar(
  */
 @Composable
 fun RowScope.AddNavigationItem(
-    screen: AppScreen,
-    currentScreen: AppScreen,
-    onNavigate: (AppScreen) -> Unit,
+    screen: NavKey,
+    currentScreen: NavKey,
+    onNavigate: (NavKey) -> Unit,
     iconResId: Int,
     label: String,
     colors: NavigationBarItemColors = NavigationBarItemColors(

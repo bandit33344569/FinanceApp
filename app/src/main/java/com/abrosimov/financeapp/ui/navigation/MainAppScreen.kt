@@ -3,8 +3,18 @@ package com.abrosimov.financeapp.ui.navigation
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
+/**
+ * Базовый sealed класс, представляющий основные экраны приложения, доступные через нижнюю навигацию.
+ *
+ * Используется для реализации
+ * навигации между ключевыми разделами приложения. Каждый экран представлен как объект (data object),
+ * чтобы обеспечить уникальность и удобство сравнения.
+ *
+ * Реализует интерфейс [NavKey], что позволяет использовать эти экраны в системе навигации Compose.
+ */
 @Serializable
 sealed class MainAppScreen : NavKey {
+
     @Serializable
     data object Expenses : MainAppScreen(), NavKey
 
@@ -21,5 +31,11 @@ sealed class MainAppScreen : NavKey {
     data object Settings : MainAppScreen(), NavKey
 }
 
+/**
+ * Экран "История".
+ *
+ * Предоставляет доступ к полной истории транзакций пользователя за разные периоды времени.
+ * Используется как отдельный экран навигации.
+ */
 @Serializable
 data object History : NavKey

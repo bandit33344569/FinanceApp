@@ -16,6 +16,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation3.runtime.NavKey
 import com.abrosimov.financeapp.R
 
+/**
+ * Компонент нижней панели навигации, отображающий несколько пунктов меню.
+ *
+ * Позволяет пользователю перемещаться между основными экранами приложения: Расходы, Доходы,
+ * Счет, Статьи и Настройки. Использует [NavigationBar] из Material 3.
+ *
+ * @param currentScreen Текущий активный экран (для подсветки выбранного элемента).
+ * @param onNavigate Функция обратного вызова, вызываемая при выборе нового экрана.
+ */
 @Composable
 fun BottomNavigationBar(
     currentScreen: NavKey,
@@ -33,7 +42,7 @@ fun BottomNavigationBar(
             MainAppScreen.Settings
         )
 
-        screens.forEach { screen : MainAppScreen ->
+        screens.forEach { screen: MainAppScreen ->
             val iconResId = when (screen) {
                 MainAppScreen.Expenses -> R.drawable.ic_expenses
                 MainAppScreen.Income -> R.drawable.ic_income
@@ -62,13 +71,17 @@ fun BottomNavigationBar(
 }
 
 /**
- * Отдельный элемент нижней панели навигации
+ * Отдельный элемент нижней панели навигации, представляющий один экран приложения.
  *
- * @param screen Экран, связанный с этим элементом
- * @param currentScreen Текущий экран приложения
- * @param onNavigate Функция для перехода
- * @param iconResId Иконка элемента
- * @param label Заголовок элемента
+ * Отображает иконку и текстовый заголовок, меняя цвета в зависимости от того,
+ * является ли элемент текущим активным экраном.
+ *
+ * @param screen Экран, связанный с этим элементом навигации.
+ * @param currentScreen Текущий активный экран приложения.
+ * @param onNavigate Функция обратного вызова, вызываемая при нажатии на элемент.
+ * @param iconResId Ресурс иконки, отображаемой для этого элемента.
+ * @param label Текстовая метка, отображаемая под иконкой.
+ * @param colors Цвета элемента, зависящие от состояния (выбран/не выбран/отключен).
  */
 @Composable
 fun RowScope.AddNavigationItem(

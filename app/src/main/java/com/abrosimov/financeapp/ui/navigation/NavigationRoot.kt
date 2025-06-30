@@ -16,20 +16,30 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.abrosimov.financeapp.ui.FinanceViewModel
-import com.abrosimov.financeapp.ui.screens.CategoryScreen
-import com.abrosimov.financeapp.ui.screens.AccountScreen
-import com.abrosimov.financeapp.ui.screens.ExpensesScreen
-import com.abrosimov.financeapp.ui.screens.HistoryScreen
-import com.abrosimov.financeapp.ui.screens.IncomeScreen
-import com.abrosimov.financeapp.ui.screens.SettingsScreen
+import com.abrosimov.account.presentation.AccountScreen
+import com.abrosimov.categories.presentation.CategoryScreen
+import com.abrosimov.core.presentation.navigation.HistoryType
+import com.abrosimov.expenses.presentation.screen.ExpensesScreen
+import com.abrosimov.history.presentation.screen.HistoryScreen
+import com.abrosimov.incomes.presentation.IncomeScreen
+import com.abrosimov.settings.presentation.SettingsScreen
 
+/**
+ * Основной навигационный компонент приложения, управляющий переходами между экранами.
+ *
+ * Реализует полный цикл навигации с поддержкой:
+ * - Нижней панели навигации (Bottom Navigation)
+ * - Верхней панели с динамическим заголовком и действиями
+ * - Floating Action Button (FAB) — отображается только при необходимости
+ * - Поддержка вложенных экранов (например, "История")
+ *
+ * Использует [androidx.navigation3] — новую систему навигации Jetpack Compose.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationRoot(modifier: Modifier = Modifier) {
@@ -45,7 +55,6 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
             navigateToHistoryExpense = { backStack.add(HistoryType.Expenses) },
             navigateToHistoryIncome = { backStack.add(HistoryType.Income) })
     }
-    val viewModel: FinanceViewModel = hiltViewModel()
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
@@ -92,19 +101,19 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
             onBack = { backStack.removeLastOrNull() },
             entryProvider = entryProvider {
                 entry<MainAppScreen.Expenses> {
-                    ExpensesScreen(viewModel)
+                    ExpensesScreen()
                 }
 
                 entry<MainAppScreen.Income> {
-                    IncomeScreen(viewModel)
+                    IncomeScreen()
                 }
 
                 entry<MainAppScreen.Account> {
-                    AccountScreen(viewModel)
+                    AccountScreen()
                 }
 
                 entry<MainAppScreen.Articles> {
-                    CategoryScreen(viewModel)
+                    CategoryScreen()
                 }
 
                 entry<MainAppScreen.Settings> {
@@ -112,10 +121,12 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
                 }
 
                 entry<HistoryType.Expenses> {
-                    HistoryScreen(viewModel, HistoryType.Expenses)
+                    HistoryScreen(
+                        historyType = HistoryType.Expenses
+                    )
                 }
                 entry<HistoryType.Income> {
-                    HistoryScreen(viewModel, HistoryType.Income)
+                    HistoryScreen(historyType = HistoryType.Income)
                 }
             }
         )

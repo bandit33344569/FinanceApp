@@ -21,6 +21,7 @@ android {
         val properties = Properties()
         properties.load(project.rootProject.file("local.properties").inputStream())
         buildConfigField("String", "BEARER_TOKEN", "\"${properties.getProperty("BEARER_TOKEN")}\"")
+        buildConfigField("int", "ACCOUNT_ID", properties.getProperty("ACCOUNT_ID"))
     }
 
     buildTypes {
@@ -40,7 +41,7 @@ android {
         jvmTarget = "11"
     }
 
-    buildFeatures{
+    buildFeatures {
         buildConfig = true
     }
 }
@@ -86,6 +87,6 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
 
-    implementation ("com.google.dagger:dagger:2.56.2")
+    implementation("com.google.dagger:dagger:2.56.2")
     ksp("com.google.dagger:dagger-compiler:2.56.2")
 }

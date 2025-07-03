@@ -10,6 +10,7 @@ import com.abrosimov.expenses.domain.mappers.toExpense
 import com.abrosimov.expenses.domain.models.ExpensesSummary
 import com.abrosimov.incomes.domain.mappers.toIncome
 import com.abrosimov.incomes.domain.models.IncomesSummary
+import com.abrosimov.network.BuildConfig
 import com.abrosimov.transactiondata.domain.usecase.GetTransactionsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -108,7 +109,7 @@ class HistoryViewModel @Inject constructor(
 
             _historyTransactions.value = Resource.Loading
             _historyTransactions.value =
-                getTransactionsUseCase(accountId = 10, startDateStr, endDateStr)
+                getTransactionsUseCase(accountId = BuildConfig.ACCOUNT_ID, startDateStr, endDateStr)
         }
     }
 

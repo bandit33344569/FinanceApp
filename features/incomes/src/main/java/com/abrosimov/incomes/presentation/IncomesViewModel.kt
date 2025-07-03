@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.abrosimov.core.domain.Resource
 import com.abrosimov.incomes.domain.models.IncomesSummary
 import com.abrosimov.incomes.domain.usecase.GetTodayIncomesUseCase
+import com.abrosimov.network.BuildConfig
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -44,9 +45,9 @@ class IncomesViewModel @Inject constructor(
      *
      * @param accountId Идентификатор счета, по которому нужно получить данные (по умолчанию = 10).
      */
-    fun loadTodayIncomes(accountId: Int = 10) {
+    fun loadTodayIncomes() {
         viewModelScope.launch {
-            val result = getTodayIncomesUseCase.invoke(accountId)
+            val result = getTodayIncomesUseCase.invoke(accountId = BuildConfig.ACCOUNT_ID)
             _todayIncomesSummary.value = result
         }
     }

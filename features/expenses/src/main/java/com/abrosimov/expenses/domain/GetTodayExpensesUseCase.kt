@@ -38,7 +38,6 @@ class GetTodayExpensesUseCase @Inject constructor(
             val filteredAndMapped = transactions
                 .filter { !it.category.isIncome }
                 .map { it.toExpense() }
-
             val currency = filteredAndMapped.firstOrNull()?.currency ?: "₽"
             val totalAmount = filteredAndMapped.sumOf { it.amount.toDouble() }
 

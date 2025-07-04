@@ -1,14 +1,16 @@
 package com.abrosimov.financeapp.di
 
 import androidx.lifecycle.ViewModel
-import com.abrosimov.account.presentation.AccountViewModel
+import com.abrosimov.account.presentation.viewmodel.AccountViewModel
 import com.abrosimov.categories.presentation.CategoriesViewModel
+import com.abrosimov.core.presentation.viewmodel.SharedAppViewModel
 import com.abrosimov.expenses.presentation.viewmodel.ExpensesViewModel
 import com.abrosimov.history.presentation.viewModel.HistoryViewModel
 import com.abrosimov.incomes.presentation.IncomesViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import javax.inject.Singleton
 
 /**
  * Модуль Dagger, отвечающий за связывание конкретных ViewModel с их классами через механизм multibinding.
@@ -49,6 +51,7 @@ interface ViewModelModule {
      */
     @Binds
     @IntoMap
+    @Singleton
     @ViewModelKey(AccountViewModel::class)
     fun bindAccountViewModel(viewModel: AccountViewModel): ViewModel
 
@@ -73,4 +76,11 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(HistoryViewModel::class)
     fun bindHistoryViewModel(viewModel: HistoryViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @Singleton
+    @ViewModelKey(SharedAppViewModel::class)
+    fun bindSharedAppViewModel(viewModel: SharedAppViewModel): ViewModel
+
 }

@@ -2,6 +2,7 @@ package com.abrosimov.expenses.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.abrosimov.core.data.repository.CurrencyRepository
 import com.abrosimov.core.domain.Resource
 import com.abrosimov.expenses.domain.GetTodayExpensesUseCase
 import com.abrosimov.expenses.domain.models.ExpensesSummary
@@ -23,6 +24,7 @@ import javax.inject.Inject
  */
 class ExpensesViewModel @Inject constructor(
     private val getTodayExpensesUseCase: GetTodayExpensesUseCase,
+    private val currencyRepository: CurrencyRepository
 ) : ViewModel() {
 
     /**
@@ -47,6 +49,9 @@ class ExpensesViewModel @Inject constructor(
      *
      * @param accountId Идентификатор счета, по которому нужно получить данные (по умолчанию = 10).
      */
+    fun getCurrency(): String {
+        return currencyRepository.getSelectedCurrency()
+    }
     fun loadTodayExpenses() {
         viewModelScope.launch {
             val result = getTodayExpensesUseCase.invoke(accountId = BuildConfig.ACCOUNT_ID)

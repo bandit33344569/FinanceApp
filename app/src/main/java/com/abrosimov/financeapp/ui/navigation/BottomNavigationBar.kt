@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation3.runtime.NavKey
 import com.abrosimov.financeapp.R
+import com.abrosimov.financeapp.ui.navigation.screens.MainAppScreen
 
 /**
  * Компонент нижней панели навигации, отображающий несколько пунктов меню.

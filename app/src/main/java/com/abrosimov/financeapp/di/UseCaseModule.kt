@@ -2,6 +2,7 @@ package com.abrosimov.financeapp.di
 
 import com.abrosimov.account.domain.repository.AccountRepository
 import com.abrosimov.account.domain.usecase.GetAccountUseCase
+import com.abrosimov.account.domain.usecase.UpdateAccountUseCase
 import com.abrosimov.categories.domain.repository.CategoriesRepository
 import com.abrosimov.categories.domain.usecase.GetCategoriesUseCase
 import com.abrosimov.expenses.domain.GetTodayExpensesUseCase
@@ -30,6 +31,12 @@ object UseCaseModule {
     @Provides
     @Singleton
     fun provideAccountUseCase(repo: AccountRepository): GetAccountUseCase = GetAccountUseCase(repo)
+
+    @Provides
+    @Singleton
+    fun provideUpdateAccountUseCase(repo: AccountRepository): UpdateAccountUseCase = UpdateAccountUseCase(
+        repo
+    )
 
     /**
      * Предоставляет экземпляр [GetCategoriesUseCase], используемый для получения данных о категориях.

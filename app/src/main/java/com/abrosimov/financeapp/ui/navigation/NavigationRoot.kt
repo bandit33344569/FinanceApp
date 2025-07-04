@@ -16,15 +16,21 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.abrosimov.account.presentation.AccountScreen
+import com.abrosimov.account.presentation.screens.AccountEditScreen
+import com.abrosimov.account.presentation.screens.AccountScreen
 import com.abrosimov.categories.presentation.CategoryScreen
+import com.abrosimov.core.di.LocalViewModelFactory
 import com.abrosimov.core.presentation.navigation.HistoryType
+import com.abrosimov.core.presentation.viewmodel.SharedAppViewModel
 import com.abrosimov.expenses.presentation.screen.ExpensesScreen
+import com.abrosimov.financeapp.ui.navigation.screens.AccountEdit
+import com.abrosimov.financeapp.ui.navigation.screens.MainAppScreen
 import com.abrosimov.history.presentation.screen.HistoryScreen
 import com.abrosimov.incomes.presentation.IncomeScreen
 import com.abrosimov.settings.presentation.SettingsScreen
@@ -42,18 +48,23 @@ import com.abrosimov.settings.presentation.SettingsScreen
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NavigationRoot(modifier: Modifier = Modifier) {
-    val backStack = rememberNavBackStack(MainAppScreen.Expenses)
+fun NavigationRoot(sharedAppViewModel: SharedAppViewModel = viewModel(factory = LocalViewModelFactory.current,key = "SharedAppViewModel")) {
+    val backStack = rememberNavBackStack(MainAppScreen.Account)
     var currentScreen = backStack.lastOrNull() as NavKey
     val screenConfig = when (currentScreen) {
         is HistoryType -> getScreenConfig(
             currentScreen,
+            sharedAppViewModel = sharedAppViewModel,
             navigateBack = { backStack.removeLastOrNull() })
 
         else -> getScreenConfig(
             currentScreen,
             navigateToHistoryExpense = { backStack.add(HistoryType.Expenses) },
-            navigateToHistoryIncome = { backStack.add(HistoryType.Income) })
+            navigateToHistoryIncome = { backStack.add(HistoryType.Income) },
+            onNavigateToAccountEdit = { backStack.add(AccountEdit) },
+            navigateBack = { backStack.removeLastOrNull() },
+            sharedAppViewModel = sharedAppViewModel,
+        )
     }
     Scaffold(
         bottomBar = {
@@ -127,6 +138,9 @@ fun NavigationRoot(modifier: Modifier = Modifier) {
                 }
                 entry<HistoryType.Income> {
                     HistoryScreen(historyType = HistoryType.Income)
+                }
+                entry<AccountEdit> {
+                    AccountEditScreen(sharedAppViewModel)
                 }
             }
         )

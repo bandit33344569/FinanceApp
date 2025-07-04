@@ -2,6 +2,7 @@ package com.abrosimov.incomes.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.abrosimov.core.data.repository.CurrencyRepository
 import com.abrosimov.core.domain.Resource
 import com.abrosimov.incomes.domain.models.IncomesSummary
 import com.abrosimov.incomes.domain.usecase.GetTodayIncomesUseCase
@@ -22,8 +23,14 @@ import javax.inject.Inject
  * @property getTodayIncomesUseCase UseCase, используемый для получения данных о доходах за день.
  */
 class IncomesViewModel @Inject constructor(
-    private val getTodayIncomesUseCase: GetTodayIncomesUseCase
+    private val getTodayIncomesUseCase: GetTodayIncomesUseCase,
+    private val currencyRepository: CurrencyRepository
 ) : ViewModel() {
+
+    fun getCurrency(): String {
+        return currencyRepository.getSelectedCurrency()
+    }
+
     /**
      * Текущее состояние данных о доходах, представленное через [MutableStateFlow].
      * Наблюдаемое значение используется в UI для отображения прогресса, данных или ошибок.

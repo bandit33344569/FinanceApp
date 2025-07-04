@@ -2,6 +2,7 @@ package com.abrosimov.history.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.abrosimov.core.data.repository.CurrencyRepository
 import com.abrosimov.core.domain.Resource
 import com.abrosimov.core.domain.dateUtils.DateUtils
 import com.abrosimov.core.domain.models.SpecTransaction
@@ -39,7 +40,12 @@ import javax.inject.Inject
  */
 class HistoryViewModel @Inject constructor(
     private val getTransactionsUseCase: GetTransactionsUseCase,
+    private val currencyRepository: CurrencyRepository
 ) : ViewModel() {
+
+    fun getCurrency(): String {
+        return currencyRepository.getSelectedCurrency()
+    }
     /**
      * Текущее состояние списка транзакций, представленное через [MutableStateFlow].
      * Наблюдаемое значение используется в UI для отображения прогресса, данных или ошибок.

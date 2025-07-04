@@ -29,6 +29,7 @@ interface RepositoryModule {
     @Singleton
     fun bindAccountRepository(impl: AccountRepositoryImpl): AccountRepository
 
+
     /**
      * Связывает реализацию [CategoriesRepositoryImpl] с её интерфейсом [CategoriesRepository].
      *

@@ -9,7 +9,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.abrosimov.core.di.LocalViewModelFactory
 import com.abrosimov.core.domain.Resource
@@ -19,9 +19,12 @@ import com.abrosimov.expenses.presentation.viewmodel.ExpensesViewModel
 
 
 @Composable
-fun ExpensesScreen(viewModel: ExpensesViewModel = viewModel(factory = LocalViewModelFactory.current)) {
-    LaunchedEffect(Unit) { viewModel.loadTodayExpenses()}
-    val state = viewModel.todayExpensesSummary.collectAsState()
+fun ExpensesScreen(
+    viewModel: ExpensesViewModel = viewModel(factory = LocalViewModelFactory.current),
+) {
+    LaunchedEffect(Unit) { viewModel.loadTodayExpenses() }
+    val state = viewModel.todayExpensesSummary.collectAsStateWithLifecycle()
+    val currency = viewModel.getCurrency()
     when (val res = state.value) {
         is Resource.Error -> {
             Column {
@@ -37,7 +40,6 @@ fun ExpensesScreen(viewModel: ExpensesViewModel = viewModel(factory = LocalViewM
             val summary = res.data
             val expenses = summary.expenses
             val totalAmount = summary.totalAmount
-            val currency = summary.currency
             Column {
                 ExpenseHeader("$totalAmount $currency")
                 LazyColumn {
@@ -48,6 +50,7 @@ fun ExpensesScreen(viewModel: ExpensesViewModel = viewModel(factory = LocalViewM
                         HorizontalDivider()
                     }
                 }
+
             }
         }
     }

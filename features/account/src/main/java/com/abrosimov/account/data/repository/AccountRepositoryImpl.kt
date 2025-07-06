@@ -1,7 +1,6 @@
 package com.abrosimov.data.repository
 
 import com.abrosimov.account.data.api.AccountApi
-import com.abrosimov.core.data.models.dto.AccountDto
 import com.abrosimov.core.data.models.responses.AccountHistoryResponse
 import com.abrosimov.core.data.models.responses.AccountResponse
 import com.abrosimov.core.data.models.requests.AccountUpdateRequest
@@ -10,6 +9,7 @@ import com.abrosimov.account.domain.repository.AccountRepository
 import com.abrosimov.core.data.mappers.toDomain
 import com.abrosimov.core.domain.Resource
 import com.abrosimov.core.domain.flatMap
+import com.abrosimov.core.domain.map
 import com.abrosimov.network.apiCall.safeApiCall
 import com.abrosimov.network.networkMonitor.NetworkMonitor
 import retrofit2.Response
@@ -45,8 +45,12 @@ class AccountRepositoryImpl @Inject constructor(
     override suspend fun updateAccount(
         accountId: Int,
         request: AccountUpdateRequest
-    ): Response<AccountDto> {
-        TODO("Not yet implemented")
+    ): Resource<Account> {
+        return safeApiCall(networkMonitor) {
+            api.updateAccount(accountId, request)
+        }.map { response ->
+            response.toDomain()
+        }
     }
 
     override suspend fun getAccountChangesHistory(accountId: Int): Response<AccountHistoryResponse> {

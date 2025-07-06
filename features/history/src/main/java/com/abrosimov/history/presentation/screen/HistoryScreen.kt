@@ -32,7 +32,10 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HistoryScreen(viewModel: HistoryViewModel = viewModel(factory = LocalViewModelFactory.current), historyType: HistoryType) {
+fun HistoryScreen(
+    viewModel: HistoryViewModel = viewModel(factory = LocalViewModelFactory.current),
+    historyType: HistoryType
+) {
     LaunchedEffect(Unit) {
         Log.d("HistoryScreen", "HistoryScreen created for $historyType")
         viewModel.loadHistoryTransactions()
@@ -41,6 +44,7 @@ fun HistoryScreen(viewModel: HistoryViewModel = viewModel(factory = LocalViewMod
         HistoryType.Expenses -> viewModel.historyExpensesSummary.collectAsState()
         HistoryType.Income -> viewModel.historyIncomesSummary.collectAsState()
     }
+    val currency = viewModel.getCurrency()
     val dateRange = viewModel.dateRange.collectAsState()
     val displayStartDate = DateUtils.dateToDayMonthTime(dateRange.value.start)
     val displayEndDate = DateUtils.dateToDayMonthTime(dateRange.value.end)
@@ -48,7 +52,7 @@ fun HistoryScreen(viewModel: HistoryViewModel = viewModel(factory = LocalViewMod
     var showStartDatePicker = rememberSaveable { mutableStateOf(false) }
     var showEndDatePicker = rememberSaveable { mutableStateOf(false) }
 
-    if(showStartDatePicker.value){
+    if (showStartDatePicker.value) {
         DatePickerModal(
             onDateSelected = {
                 viewModel.updateStartDate(Date(it ?: 0))
@@ -62,7 +66,7 @@ fun HistoryScreen(viewModel: HistoryViewModel = viewModel(factory = LocalViewMod
 
     }
 
-    if(showEndDatePicker.value){
+    if (showEndDatePicker.value) {
         DatePickerModal(
             onDateSelected = {
                 viewModel.updateEndDate(Date(it ?: 0))
@@ -85,7 +89,7 @@ fun HistoryScreen(viewModel: HistoryViewModel = viewModel(factory = LocalViewMod
                         HistoryHeader(
                             startDate = displayStartDate,
                             endDate = displayEndDate,
-                            summary = "${summary.totalAmount} ${summary.currency}",
+                            summary = "${summary.totalAmount} $currency",
                             onStartDateClick = { showStartDatePicker.value = true },
                             onEndDateClick = { showEndDatePicker.value = true }
                         )
@@ -103,7 +107,7 @@ fun HistoryScreen(viewModel: HistoryViewModel = viewModel(factory = LocalViewMod
                         HistoryHeader(
                             startDate = displayStartDate,
                             endDate = displayEndDate,
-                            summary = "${summary.totalAmount} ${summary.currency}",
+                            summary = "${summary.totalAmount} $currency",
                             onStartDateClick = { showStartDatePicker.value = true },
                             onEndDateClick = { showEndDatePicker.value = true }
                         )

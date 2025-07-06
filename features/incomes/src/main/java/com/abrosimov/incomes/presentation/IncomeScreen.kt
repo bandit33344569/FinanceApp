@@ -17,9 +17,12 @@ import com.abrosimov.core.domain.Resource
 
 
 @Composable
-fun IncomeScreen(viewModel: IncomesViewModel = viewModel(factory = LocalViewModelFactory.current)) {
-    LaunchedEffect(Unit) { viewModel.loadTodayIncomes()}
+fun IncomeScreen(
+    viewModel: IncomesViewModel = viewModel(factory = LocalViewModelFactory.current)
+) {
+    LaunchedEffect(Unit) { viewModel.loadTodayIncomes() }
     val state = viewModel.todayIncomesSummary.collectAsState()
+    val currency = viewModel.getCurrency()
     when (val res = state.value) {
         is Resource.Error -> {
             Column {
@@ -35,7 +38,6 @@ fun IncomeScreen(viewModel: IncomesViewModel = viewModel(factory = LocalViewMode
             val summary = res.data
             val incomes = summary.incomes
             val totalAmount = summary.totalAmount
-            val currency = summary.currency
             Column {
                 IncomeHeader("$totalAmount $currency")
                 LazyColumn {

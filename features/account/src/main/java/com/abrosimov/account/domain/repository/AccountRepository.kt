@@ -1,6 +1,5 @@
 package com.abrosimov.account.domain.repository
 
-import com.abrosimov.core.data.models.dto.AccountDto
 import com.abrosimov.core.data.models.responses.AccountHistoryResponse
 import com.abrosimov.core.data.models.responses.AccountResponse
 import com.abrosimov.core.data.models.requests.AccountUpdateRequest
@@ -17,7 +16,7 @@ interface AccountRepository {
     suspend fun updateAccount(
         accountId: Int,
         request: AccountUpdateRequest
-    ): Response<AccountDto>
+    ): Resource<Account>
 
     suspend fun getAccountChangesHistory(
         accountId: Int

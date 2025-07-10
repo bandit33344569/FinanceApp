@@ -3,8 +3,8 @@ package com.abrosimov.financeapp.ui.navigation.screensconfigs
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.ui.res.painterResource
-import com.abrosimov.core.presentation.viewmodel.SharedAppViewModel
 import com.abrosimov.financeapp.R
+import com.abrosimov.ui.viewmodel.SharedAppViewModel
 
 fun createAccountEditConfig(
     sharedAppViewModel: SharedAppViewModel,

@@ -1,8 +1,6 @@
 package com.abrosimov.financeapp.ui.navigation
 
 import androidx.navigation3.runtime.NavKey
-import com.abrosimov.core.presentation.navigation.HistoryType
-import com.abrosimov.core.presentation.viewmodel.SharedAppViewModel
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.ScreenConfig
 import com.abrosimov.financeapp.ui.navigation.screens.AccountEdit
 import com.abrosimov.financeapp.ui.navigation.screens.MainAppScreen
@@ -14,6 +12,8 @@ import com.abrosimov.financeapp.ui.navigation.screensconfigs.createHistoryIncome
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createSettingConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createTodayExpensesConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createTodayIncomesConfig
+import com.abrosimov.ui.navigation.HistoryType
+import com.abrosimov.ui.viewmodel.SharedAppViewModel
 
 /**
  * Возвращает конфигурацию экрана на основе текущего ключа навигации.

@@ -14,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,15 +26,15 @@ import androidx.navigation3.ui.NavDisplay
 import com.abrosimov.account.presentation.screens.AccountEditScreen
 import com.abrosimov.account.presentation.screens.AccountScreen
 import com.abrosimov.categories.presentation.CategoryScreen
-import com.abrosimov.core.di.LocalViewModelFactory
-import com.abrosimov.core.presentation.navigation.HistoryType
-import com.abrosimov.core.presentation.viewmodel.SharedAppViewModel
-import com.abrosimov.expenses.presentation.screen.ExpensesScreen
 import com.abrosimov.financeapp.ui.navigation.screens.AccountEdit
 import com.abrosimov.financeapp.ui.navigation.screens.MainAppScreen
-import com.abrosimov.history.presentation.screen.HistoryScreen
-import com.abrosimov.incomes.presentation.IncomeScreen
 import com.abrosimov.settings.presentation.SettingsScreen
+import com.abrosimov.transactions.expenses.ui.ExpensesScreen
+import com.abrosimov.transactions.history.ui.HistoryScreen
+import com.abrosimov.transactions.incomes.ui.IncomeScreen
+import com.abrosimov.ui.di.DaggerSharedViewModelComponent
+import com.abrosimov.ui.navigation.HistoryType
+import com.abrosimov.ui.viewmodel.SharedAppViewModel
 
 /**
  * Основной навигационный компонент приложения, управляющий переходами между экранами.
@@ -48,7 +49,11 @@ import com.abrosimov.settings.presentation.SettingsScreen
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NavigationRoot(sharedAppViewModel: SharedAppViewModel = viewModel(factory = LocalViewModelFactory.current,key = "SharedAppViewModel")) {
+fun NavigationRoot() {
+    val sharedViewModelComponent = remember{
+        DaggerSharedViewModelComponent.builder().build()
+    }
+    val sharedAppViewModel = viewModel<SharedAppViewModel>(factory = sharedViewModelComponent.sharedAppViewModelFactory)
     val backStack = rememberNavBackStack(MainAppScreen.Account)
     var currentScreen = backStack.lastOrNull() as NavKey
     val screenConfig = when (currentScreen) {
@@ -140,7 +145,7 @@ fun NavigationRoot(sharedAppViewModel: SharedAppViewModel = viewModel(factory = 
                     HistoryScreen(historyType = HistoryType.Income)
                 }
                 entry<AccountEdit> {
-                    AccountEditScreen(sharedAppViewModel)
+                    AccountEditScreen()
                 }
             }
         )

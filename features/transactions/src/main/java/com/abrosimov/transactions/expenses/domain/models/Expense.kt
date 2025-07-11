@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class Expense(
-    val id: String,
+    val id: Int,
     val title: String,
     val subtitle: String? = null,
     val createdAt: String,

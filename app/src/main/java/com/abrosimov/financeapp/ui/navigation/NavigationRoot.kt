@@ -28,6 +28,7 @@ import com.abrosimov.account.presentation.screens.AccountScreen
 import com.abrosimov.categories.presentation.CategoryScreen
 import com.abrosimov.financeapp.ui.navigation.screens.AccountEdit
 import com.abrosimov.financeapp.ui.navigation.screens.MainAppScreen
+import com.abrosimov.financeapp.ui.navigation.screens.TransactionEditScreen
 import com.abrosimov.settings.presentation.SettingsScreen
 import com.abrosimov.transactions.expenses.ui.ExpensesScreen
 import com.abrosimov.transactions.history.ui.HistoryScreen
@@ -50,10 +51,11 @@ import com.abrosimov.ui.viewmodel.SharedAppViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationRoot() {
-    val sharedViewModelComponent = remember{
+    val sharedViewModelComponent = remember {
         DaggerSharedViewModelComponent.builder().build()
     }
-    val sharedAppViewModel = viewModel<SharedAppViewModel>(factory = sharedViewModelComponent.sharedAppViewModelFactory)
+    val sharedAppViewModel =
+        viewModel<SharedAppViewModel>(factory = sharedViewModelComponent.sharedAppViewModelFactory)
     val backStack = rememberNavBackStack(MainAppScreen.Account)
     var currentScreen = backStack.lastOrNull() as NavKey
     val screenConfig = when (currentScreen) {
@@ -117,11 +119,27 @@ fun NavigationRoot() {
             onBack = { backStack.removeLastOrNull() },
             entryProvider = entryProvider {
                 entry<MainAppScreen.Expenses> {
-                    ExpensesScreen()
+                    ExpensesScreen(
+                        onTransactionClick = { transactionId ->
+                            backStack.add(
+                                TransactionEditScreen(
+                                    transactionId
+                                )
+                            )
+                        }
+                    )
                 }
 
                 entry<MainAppScreen.Income> {
-                    IncomeScreen()
+                    IncomeScreen(
+                        onTransactionClick = { transactionId ->
+                            backStack.add(
+                                TransactionEditScreen(
+                                    transactionId
+                                )
+                            )
+                        }
+                    )
                 }
 
                 entry<MainAppScreen.Account> {
@@ -138,14 +156,34 @@ fun NavigationRoot() {
 
                 entry<HistoryType.Expenses> {
                     HistoryScreen(
-                        historyType = HistoryType.Expenses
+                        historyType = HistoryType.Expenses,
+                        onTransactionClick = { transactionId ->
+                            backStack.add(
+                                TransactionEditScreen(
+                                    transactionId
+                                )
+                            )
+                        }
                     )
                 }
                 entry<HistoryType.Income> {
-                    HistoryScreen(historyType = HistoryType.Income)
+                    HistoryScreen(
+                        historyType = HistoryType.Income,
+                        onTransactionClick = { transactionId ->
+                            backStack.add(
+                                TransactionEditScreen(
+                                    transactionId
+                                )
+                            )
+                        }
+                    )
                 }
                 entry<AccountEdit> {
                     AccountEditScreen()
+                }
+                entry<TransactionEditScreen> { screen ->
+                    val transactionId = screen.id
+                    com.abrosimov.transactions.edit_transaction.ui.TransactionEditScreen(id = transactionId)
                 }
             }
         )

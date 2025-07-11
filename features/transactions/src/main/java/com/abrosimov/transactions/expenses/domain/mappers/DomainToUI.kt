@@ -6,7 +6,7 @@ import com.abrosimov.transactions.expenses.domain.models.Expense
 
 fun SpecTransaction.toExpense(): Expense {
     return Expense(
-        id = id.toString(),
+        id = id,
         title = category.name,
         subtitle = comment,
         createdAt = createdAt,

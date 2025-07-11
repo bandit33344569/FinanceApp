@@ -30,7 +30,8 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
-    historyType: HistoryType
+    historyType: HistoryType,
+    onTransactionClick: ((Int?) -> (Unit))
 ) {
     val historyComponent = remember {
         DaggerHistoryComponent.builder()
@@ -97,7 +98,9 @@ fun HistoryScreen(
                         )
                         LazyColumn {
                             items(summary.incomes) { income ->
-                                HistoryIncomeListItem(income = income)
+                                HistoryIncomeListItem(
+                                    income = income,
+                                    onClick = { onTransactionClick(income.id) })
                                 HorizontalDivider()
                             }
                         }
@@ -115,7 +118,9 @@ fun HistoryScreen(
                         )
                         LazyColumn {
                             items(summary.expenses) { expense ->
-                                HistoryExpenseListItem(expense = expense)
+                                HistoryExpenseListItem(
+                                    expense = expense,
+                                    onClick = { onTransactionClick(expense.id) })
                                 HorizontalDivider()
                             }
                         }

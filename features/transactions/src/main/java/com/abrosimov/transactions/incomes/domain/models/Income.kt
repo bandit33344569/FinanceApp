@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 
 @Immutable
 data class Income(
-    val id: String,
+    val id: Int,
     val amount: String,
     val source: String,
     val currency: String,

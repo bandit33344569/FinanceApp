@@ -19,6 +19,7 @@ import com.abrosimov.utils.models.Resource
 
 @Composable
 fun ExpensesScreen(
+    onTransactionClick: ((Int?) -> (Unit))
 ) {
     val expensesComponent = remember {
         DaggerExpensesComponent
@@ -53,6 +54,7 @@ fun ExpensesScreen(
                     items (expenses) { expense ->
                         ExpenseListItem(
                             expense = expense,
+                            onDetailClick = {onTransactionClick(expense.id)}
                         )
                         HorizontalDivider()
                     }

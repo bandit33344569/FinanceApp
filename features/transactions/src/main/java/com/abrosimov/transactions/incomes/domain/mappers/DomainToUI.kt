@@ -6,7 +6,7 @@ import com.abrosimov.transactions.incomes.domain.models.Income
 
 fun SpecTransaction.toIncome(): Income {
     return Income(
-        id = id.toString(),
+        id = id,
         amount = amount,
         source = category.name,
         currency = currency,

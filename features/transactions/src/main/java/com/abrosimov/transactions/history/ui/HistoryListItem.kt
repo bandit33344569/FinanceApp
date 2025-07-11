@@ -7,8 +7,12 @@ import com.abrosimov.transactions.incomes.domain.models.Income
 import com.abrosimov.ui.composableFunctions.CustomListItem
 import com.abrosimov.utils.dateutils.DateUtils
 import com.abrosimov.transactions.R
+
 @Composable
-fun HistoryExpenseListItem(expense: Expense) {
+fun HistoryExpenseListItem(
+    expense: Expense,
+    onClick: () -> (Unit) = {}
+) {
     CustomListItem(
         leftTitle = expense.title,
         leftSubtitle = expense.subtitle,
@@ -19,11 +23,15 @@ fun HistoryExpenseListItem(expense: Expense) {
         listBackground = MaterialTheme.colorScheme.background,
         leftIconBackground = MaterialTheme.colorScheme.secondary,
         clickable = true,
+        onClick = onClick
     )
 }
 
 @Composable
-fun HistoryIncomeListItem(income: Income) {
+fun HistoryIncomeListItem(
+    income: Income,
+    onClick: () -> (Unit) = {}
+) {
     CustomListItem(
         leftTitle = income.source,
         rightTitle = income.amount + " " + income.currency,
@@ -32,5 +40,6 @@ fun HistoryIncomeListItem(income: Income) {
         listBackground = MaterialTheme.colorScheme.background,
         leftIconBackground = MaterialTheme.colorScheme.secondary,
         clickable = true,
+        onClick = onClick
     )
 }

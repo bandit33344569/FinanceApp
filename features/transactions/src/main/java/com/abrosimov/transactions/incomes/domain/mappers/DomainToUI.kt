@@ -11,6 +11,6 @@ fun SpecTransaction.toIncome(): Income {
         source = category.name,
         currency = currency,
         subtitle = comment,
-        createdAt = createdAt,
+        date = transactionDate,
     )
 }

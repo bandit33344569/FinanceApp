@@ -17,7 +17,7 @@ fun HistoryExpenseListItem(
         leftTitle = expense.title,
         leftSubtitle = expense.subtitle,
         rightTitle = expense.amount + " " + expense.currency,
-        rightSubtitle = DateUtils.dateToDayMonthTime(DateUtils.isoStringToDate(expense.createdAt)),
+        rightSubtitle = DateUtils.dateToDayMonthTime(DateUtils.isoStringToDate(expense.data)),
         leftIcon = expense.iconTag,
         rightIcon = R.drawable.ic_drill_in,
         listBackground = MaterialTheme.colorScheme.background,
@@ -35,7 +35,7 @@ fun HistoryIncomeListItem(
     CustomListItem(
         leftTitle = income.source,
         rightTitle = income.amount + " " + income.currency,
-        rightSubtitle = DateUtils.dateToDayMonthTime(DateUtils.isoStringToDate(income.createdAt)),
+        rightSubtitle = DateUtils.dateToDayMonthTime(DateUtils.isoStringToDate(income.date)),
         rightIcon = R.drawable.ic_drill_in,
         listBackground = MaterialTheme.colorScheme.background,
         leftIconBackground = MaterialTheme.colorScheme.secondary,

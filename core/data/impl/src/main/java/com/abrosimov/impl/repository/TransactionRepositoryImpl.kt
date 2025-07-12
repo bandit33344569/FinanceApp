@@ -1,5 +1,7 @@
 package com.abrosimov.impl.repository
 
+import com.abrosimov.api.models.dto.TransactionDto
+import com.abrosimov.api.models.requests.TransactionRequest
 import com.abrosimov.api.models.responses.TransactionResponse
 import com.abrosimov.api.repository.TransactionRepository
 import com.abrosimov.api.service.TransactionsApi
@@ -30,6 +32,31 @@ class TransactionRepositoryImpl @Inject constructor(
     ): Resource<List<TransactionResponse>> {
         return safeApiCall(networkMonitor) {
             api.getTransactionsFromPeriod(accountId, startDate, endDate)
+        }
+    }
+
+    override suspend fun getTransactionById(transactionId: Int): Resource<TransactionResponse> {
+        return safeApiCall(networkMonitor) {
+            api.getTransactionFromId(transactionId = transactionId)
+        }
+    }
+
+    override suspend fun updateTransaction(
+        transactionId: Int,
+        transactionRequest: TransactionRequest
+    ): Resource<TransactionResponse> {
+        return safeApiCall(networkMonitor) {
+            api.updateTransaction(transactionId, transactionRequest)
+        }
+    }
+
+    override suspend fun deleteTransaction(transactionId: Int) {
+        TODO()
+    }
+
+    override suspend fun createTransaction(transactionRequest: TransactionRequest): Resource<TransactionDto> {
+        return safeApiCall(networkMonitor) {
+            api.createNewTransaction(transactionRequest)
         }
     }
 }

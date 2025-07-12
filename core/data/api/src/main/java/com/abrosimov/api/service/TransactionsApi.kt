@@ -30,14 +30,14 @@ interface TransactionsApi {
     @GET("transactions/{id}")
     suspend fun getTransactionFromId(
         @Path("id") transactionId: Int
-    ): Response<TransactionDto>
+    ): Response<TransactionResponse>
 
     //обновление транзакции по id
     @PUT("transactions/{id}")
     suspend fun updateTransaction(
         @Path("id") transactionId: Int,
         @Body request: TransactionRequest
-    ): Response<TransactionDto>
+    ): Response<TransactionResponse>
 
     //удаление транзакции
     @DELETE("transactions/{id}")

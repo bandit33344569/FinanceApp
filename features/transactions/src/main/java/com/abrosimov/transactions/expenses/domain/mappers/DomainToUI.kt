@@ -9,7 +9,7 @@ fun SpecTransaction.toExpense(): Expense {
         id = id,
         title = category.name,
         subtitle = comment,
-        createdAt = createdAt,
+        data = transactionDate,
         amount = amount,
         iconTag = category.emoji,
         currency = currency

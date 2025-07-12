@@ -70,6 +70,7 @@ fun NavigationRoot() {
             navigateToHistoryIncome = { backStack.add(HistoryType.Income) },
             onNavigateToAccountEdit = { backStack.add(AccountEdit) },
             navigateBack = { backStack.removeLastOrNull() },
+            fabOnClick = { backStack.add(TransactionEditScreen(id = null)) },
             sharedAppViewModel = sharedAppViewModel,
         )
     }
@@ -121,11 +122,7 @@ fun NavigationRoot() {
                 entry<MainAppScreen.Expenses> {
                     ExpensesScreen(
                         onTransactionClick = { transactionId ->
-                            backStack.add(
-                                TransactionEditScreen(
-                                    transactionId
-                                )
-                            )
+                            backStack.add(TransactionEditScreen(transactionId))
                         }
                     )
                 }
@@ -133,13 +130,8 @@ fun NavigationRoot() {
                 entry<MainAppScreen.Income> {
                     IncomeScreen(
                         onTransactionClick = { transactionId ->
-                            backStack.add(
-                                TransactionEditScreen(
-                                    transactionId
-                                )
-                            )
-                        }
-                    )
+                            backStack.add(TransactionEditScreen(transactionId))
+                        })
                 }
 
                 entry<MainAppScreen.Account> {
@@ -158,11 +150,7 @@ fun NavigationRoot() {
                     HistoryScreen(
                         historyType = HistoryType.Expenses,
                         onTransactionClick = { transactionId ->
-                            backStack.add(
-                                TransactionEditScreen(
-                                    transactionId
-                                )
-                            )
+                            backStack.add(TransactionEditScreen(transactionId))
                         }
                     )
                 }
@@ -170,19 +158,15 @@ fun NavigationRoot() {
                     HistoryScreen(
                         historyType = HistoryType.Income,
                         onTransactionClick = { transactionId ->
-                            backStack.add(
-                                TransactionEditScreen(
-                                    transactionId
-                                )
-                            )
+                            backStack.add(TransactionEditScreen(transactionId))
                         }
                     )
                 }
                 entry<AccountEdit> {
                     AccountEditScreen()
                 }
-                entry<TransactionEditScreen> { screen ->
-                    val transactionId = screen.id
+                entry<TransactionEditScreen> { key ->
+                    val transactionId = key.id
                     com.abrosimov.transactions.edit_transaction.ui.TransactionEditScreen(id = transactionId)
                 }
             }

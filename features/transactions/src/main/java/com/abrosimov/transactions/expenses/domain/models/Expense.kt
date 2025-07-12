@@ -7,7 +7,7 @@ data class Expense(
     val id: Int,
     val title: String,
     val subtitle: String? = null,
-    val createdAt: String,
+    val data: String,
     val amount: String,
     val iconTag: String,
     val currency: String

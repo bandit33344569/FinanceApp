@@ -25,4 +25,9 @@ class CategoriesRepositoryImpl @Inject constructor(
 
         return safeApiCall(networkMonitor) { api.getAllCategories() }
     }
+
+    override suspend fun getCategoriesByType(isIncome: Boolean): Resource<List<CategoryDto>> {
+        return safeApiCall(networkMonitor) { api.getCategoriesByType(isIncome) }
+    }
+
 }

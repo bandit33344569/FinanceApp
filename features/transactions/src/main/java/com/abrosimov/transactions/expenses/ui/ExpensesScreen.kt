@@ -1,5 +1,6 @@
 package com.abrosimov.transactions.expenses.ui
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,7 +20,7 @@ import com.abrosimov.utils.models.Resource
 
 @Composable
 fun ExpensesScreen(
-    onTransactionClick: ((Int?) -> (Unit))
+    onTransactionClick: (Int?) -> (Unit)
 ) {
     val expensesComponent = remember {
         DaggerExpensesComponent
@@ -43,7 +44,7 @@ fun ExpensesScreen(
             }
         }
 
-        Resource.Loading -> CircularProgressIndicator()
+        is Resource.Loading -> CircularProgressIndicator()
         is Resource.Success -> {
             val summary = res.data
             val expenses = summary.expenses
@@ -51,10 +52,13 @@ fun ExpensesScreen(
             Column {
                 ExpenseHeader("$totalAmount $currency")
                 LazyColumn {
-                    items (expenses) { expense ->
+                    items(expenses) { expense ->
                         ExpenseListItem(
                             expense = expense,
-                            onDetailClick = {onTransactionClick(expense.id)}
+                            onClick = {
+                                onTransactionClick(expense.id)
+                                Log.d("ExpenseListItem", "clicked ${expense.id}")
+                            }
                         )
                         HorizontalDivider()
                     }

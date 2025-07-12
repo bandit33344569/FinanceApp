@@ -133,7 +133,7 @@ class HistoryViewModel @Inject constructor(
                     .filter { it.category.isIncome == false }
                     .map { it.toExpense() }
                     .sortedByDescending {
-                        DateUtils.isoStringToDate(it.createdAt).time
+                        DateUtils.isoStringToDate(it.data).time
                     }
 
                 val currency =
@@ -164,7 +164,7 @@ class HistoryViewModel @Inject constructor(
                     .filter { it.category.isIncome == true }
                     .map { it.toIncome() }
                     .sortedByDescending {
-                        DateUtils.isoStringToDate(it.createdAt).time
+                        DateUtils.isoStringToDate(it.date).time
                     }
 
                 val currency =

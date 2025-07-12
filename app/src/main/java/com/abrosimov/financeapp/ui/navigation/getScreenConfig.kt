@@ -40,12 +40,13 @@ fun getScreenConfig(
     navigateToHistoryExpense: (() -> Unit)? = null,
     navigateToHistoryIncome: (() -> Unit)? = null,
     onNavigateToAccountEdit: (() -> Unit)? = null,
+    fabOnClick: (() -> Unit)? = null,
     navigateBack: (() -> Unit)? = null,
     sharedAppViewModel: SharedAppViewModel
 ): ScreenConfig =
     when (screen) {
-        MainAppScreen.Expenses -> createTodayExpensesConfig(navigateToHistoryExpense)
-        MainAppScreen.Income -> createTodayIncomesConfig(navigateToHistoryIncome)
+        MainAppScreen.Expenses -> createTodayExpensesConfig(navigateToHistoryExpense,fabOnClick)
+        MainAppScreen.Income -> createTodayIncomesConfig(navigateToHistoryIncome,fabOnClick)
         MainAppScreen.Settings -> createSettingConfig()
         MainAppScreen.Articles -> createArticlesConfig()
         MainAppScreen.Account -> createAccountConfig(onNavigateToAccountEdit)

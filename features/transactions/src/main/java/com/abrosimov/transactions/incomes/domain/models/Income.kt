@@ -9,7 +9,7 @@ data class Income(
     val source: String,
     val currency: String,
     val subtitle: String? = null,
-    val createdAt: String,
+    val date: String,
 ) {
 
 }

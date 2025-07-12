@@ -8,7 +8,7 @@ import com.abrosimov.transactions.R
 @Composable
 fun IncomeListItem(
     income: Income,
-    onDetailClick: () -> Unit
+    onDetailClick: () -> (Unit) = {}
 ){
     CustomListItem(
         leftTitle = income.source,

@@ -9,7 +9,7 @@ import com.abrosimov.transactions.R
 @Composable
 fun ExpenseListItem(
     expense: Expense,
-    onDetailClick: () -> Unit = {}
+    onClick: () -> (Unit) = {}
 ) {
     CustomListItem(
         leftTitle = expense.title,
@@ -20,6 +20,6 @@ fun ExpenseListItem(
         listBackground = MaterialTheme.colorScheme.background,
         leftIconBackground = MaterialTheme.colorScheme.secondary,
         clickable = true,
-        onClick = onDetailClick
+        onClick = onClick
     )
 }

@@ -20,7 +20,7 @@ import com.abrosimov.utils.models.Resource
 
 @Composable
 fun IncomeScreen(
-    onTransactionClick: ((Int?) -> (Unit))
+    onTransactionClick: (Int?) -> (Unit)
 ) {
     val incomeComponent = remember {
         DaggerIncomesComponent.builder()
@@ -52,7 +52,7 @@ fun IncomeScreen(
                     items(incomes) { income ->
                         IncomeListItem(
                             income,
-                            onDetailClick = { onTransactionClick }
+                            onDetailClick = { onTransactionClick(income.id) }
                         )
                         HorizontalDivider()
                     }

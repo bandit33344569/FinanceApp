@@ -22,6 +22,7 @@ import com.abrosimov.transactions.di.TransactionDependenciesStore
 import com.abrosimov.transactions.expenses.domain.models.ExpensesSummary
 import com.abrosimov.transactions.history.di.DaggerHistoryComponent
 import com.abrosimov.transactions.incomes.domain.models.IncomesSummary
+import com.abrosimov.ui.composableFunctions.DatePickerModal
 import com.abrosimov.ui.navigation.HistoryType
 import com.abrosimov.utils.dateutils.DateUtils
 import com.abrosimov.utils.models.Resource
@@ -100,7 +101,8 @@ fun HistoryScreen(
                             items(summary.incomes) { income ->
                                 HistoryIncomeListItem(
                                     income = income,
-                                    onClick = { onTransactionClick(income.id) })
+                                    onClick = { onTransactionClick(income.id)
+                                        Log.d("HistoryItemClicked", "clicked ${income.id}")})
                                 HorizontalDivider()
                             }
                         }
@@ -120,7 +122,9 @@ fun HistoryScreen(
                             items(summary.expenses) { expense ->
                                 HistoryExpenseListItem(
                                     expense = expense,
-                                    onClick = { onTransactionClick(expense.id) })
+                                    onClick = {
+                                        onTransactionClick(expense.id)
+                                    })
                                 HorizontalDivider()
                             }
                         }

@@ -3,6 +3,7 @@ package com.abrosimov.api.service
 import com.abrosimov.api.models.dto.CategoryDto
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface CategoriesApi {
     //список всех категорий: расходов и доходов
@@ -11,5 +12,7 @@ interface CategoriesApi {
 
     //список категроий по типу
     @GET("categories/type/{isIncome}")
-    suspend fun getCategoriesByType(): Response<List<CategoryDto>>
+    suspend fun getCategoriesByType(
+        @Path("isIncome") isIncome: Boolean
+    ): Response<List<CategoryDto>>
 }

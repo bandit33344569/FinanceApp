@@ -26,14 +26,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.abrosimov.core.di.LocalViewModelFactory
-import com.abrosimov.core.domain.Resource
-import com.abrosimov.core.domain.models.Category
+import com.abrosimov.categories.di.component.DaggerCategoriesComponent
+import com.abrosimov.categories.di.dependencies.CategoriesDependenciesStore
+import com.abrosimov.impl.models.Category
+import com.abrosimov.utils.models.Resource
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CategoryScreen(viewModel: CategoriesViewModel = viewModel(factory = LocalViewModelFactory.current)) {
+fun CategoryScreen() {
+    val categoriesComponent =
+        remember {
+            DaggerCategoriesComponent
+                .builder()
+                .dependencies(categoriesDependencies = CategoriesDependenciesStore.categoriesDependencies)
+                .build()
+        }
+
+    val viewModel =
+        viewModel<CategoriesViewModel>(factory = categoriesComponent.categoriesViewModelFactory)
     LaunchedEffect(Unit) { viewModel.loadCategories() }
     val state = viewModel.filteredCategoriesWithResource.collectAsState()
     var searchQuery = viewModel.searchQuery.collectAsState()

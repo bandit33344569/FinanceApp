@@ -2,8 +2,8 @@ package com.abrosimov.categories.presentation
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import com.abrosimov.core.domain.models.Category
-import com.abrosimov.core.presentation.composableFunctions.CustomListItem
+import com.abrosimov.impl.models.Category
+import com.abrosimov.ui.composableFunctions.CustomListItem
 
 @Composable
 fun CategoryListItem(category: Category){

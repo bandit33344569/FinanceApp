@@ -1,6 +1,7 @@
 package com.abrosimov.account.presentation.screens
 
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
@@ -18,18 +19,27 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.abrosimov.core.domain.Resource
-import com.abrosimov.core.presentation.composableFunctions.CustomListItem
 import com.abrosimov.account.R
+import com.abrosimov.account.di.components.DaggerAccountComponent
+import com.abrosimov.account.di.dependencies.AccountDependenciesStore
 import com.abrosimov.account.presentation.viewmodel.AccountViewModel
-import com.abrosimov.core.di.LocalViewModelFactory
-import com.abrosimov.core.domain.models.Account
+import com.abrosimov.impl.models.Account
+import com.abrosimov.ui.composableFunctions.CustomListItem
+import com.abrosimov.utils.models.Resource
 
 
 @Composable
 fun AccountScreen(
-    viewModel: AccountViewModel = viewModel(factory = LocalViewModelFactory.current,key = "shared_account_viewmodel"),
 ) {
+    val accountComponent =
+        remember {
+            DaggerAccountComponent
+                .builder()
+                .dependencies(accountDependencies = AccountDependenciesStore.accountDependencies)
+                .build()
+        }
+    val viewModel = viewModel<AccountViewModel>(factory = accountComponent.accountViewModelFactory)
+
     LaunchedEffect(Unit) { viewModel.loadAccount() }
     AccountBriefUI(viewModel)
 }
@@ -68,7 +78,8 @@ fun AccountBriefUI(viewModel: AccountViewModel) {
             if (showBottomSheet.value) {
                 ModalBottomSheet(
                     onDismissRequest = { showBottomSheet.value = false },
-                    sheetState = modalSheetState
+                    sheetState = modalSheetState,
+                    modifier = Modifier.background(MaterialTheme.colorScheme.background)
                 ) {
                     CustomListItem(
                         leftTitle = "Российский рубль ₽",

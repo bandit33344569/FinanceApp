@@ -3,8 +3,8 @@ package com.abrosimov.categories.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.abrosimov.categories.domain.usecase.GetCategoriesUseCase
-import com.abrosimov.core.domain.Resource
-import com.abrosimov.core.domain.models.Category
+import com.abrosimov.impl.models.Category
+import com.abrosimov.utils.models.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,10 +21,10 @@ import javax.inject.Inject
  * - Логику фильтрации по поисковому запросу
  * - Метод загрузки данных через [GetCategoriesUseCase]
  *
- * Использует [Resource] для обработки состояний:
- * - Успех ([Resource.Success])
- * - Ошибка ([Resource.Error])
- * - Загрузка ([Resource.Loading])
+ * Использует [com.abrosimov.impl.models.Resource] для обработки состояний:
+ * - Успех ([com.abrosimov.impl.models.Resource.Success])
+ * - Ошибка ([com.abrosimov.impl.models.Resource.Error])
+ * - Загрузка ([com.abrosimov.impl.models.Resource.Loading])
  *
  * @property getCategoriesUseCase UseCase, используемый для получения данных о категориях.
  */
@@ -68,10 +68,10 @@ class CategoriesViewModel @Inject constructor(
      * Фильтрованный список категорий, зависящий от текущего результата [categories] и поискового запроса [searchQuery].
      *
      * Возвращает:
-     * - [Resource.Loading], если данные еще загружаются.
-     * - [Resource.Error], если произошла ошибка при получении данных.
-     * - [Resource.Success], содержащий отфильтрованный список, если есть совпадения.
-     * - [Resource.Success] с пустым списком, если совпадений нет.
+     * - [com.abrosimov.impl.models.Resource.Loading], если данные еще загружаются.
+     * - [com.abrosimov.impl.models.Resource.Error], если произошла ошибка при получении данных.
+     * - [com.abrosimov.impl.models.Resource.Success], содержащий отфильтрованный список, если есть совпадения.
+     * - [com.abrosimov.impl.models.Resource.Success] с пустым списком, если совпадений нет.
      */
     val filteredCategoriesWithResource: StateFlow<Resource<List<Category>>> = combine(
         categories,
@@ -105,7 +105,7 @@ class CategoriesViewModel @Inject constructor(
     /**
      * Метод для асинхронной загрузки информации о категориях.
      *
-     * 1. Сначала устанавливает состояние [Resource.Loading].
+     * 1. Сначала устанавливает состояние [com.abrosimov.impl.models.Resource.Loading].
      * 2. Выполняет запрос через [GetCategoriesUseCase].
      * 3. Обновляет [_categories] результатом операции.
      */

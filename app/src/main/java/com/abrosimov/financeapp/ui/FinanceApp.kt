@@ -2,8 +2,11 @@ package com.abrosimov.financeapp.ui
 
 import android.app.Application
 import android.content.Context
+import com.abrosimov.account.di.dependencies.AccountDependenciesStore
+import com.abrosimov.categories.di.dependencies.CategoriesDependenciesStore
 import com.abrosimov.financeapp.di.AppComponent
 import com.abrosimov.financeapp.di.DaggerAppComponent
+import com.abrosimov.transactions.di.TransactionDependenciesStore
 
 /**
  * Основной класс приложения, отвечающий за инициализацию графа зависимостей.
@@ -23,7 +26,12 @@ class FinanceApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        appComponent = DaggerAppComponent.factory().create(this)
+        appComponent = DaggerAppComponent.builder().context(this).build()
+        AccountDependenciesStore.accountDependencies = appComponent
+
+        CategoriesDependenciesStore.categoriesDependencies = appComponent
+
+        TransactionDependenciesStore.transactionsDependencies = appComponent
         appComponent.inject(this)
     }
 }

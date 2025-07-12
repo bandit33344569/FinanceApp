@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.abrosimov.financeapp"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -42,16 +42,14 @@ android {
 }
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":features"))
-    implementation(project(":network"))
+    implementation(project(":core:data:impl"))
+    implementation(project(":core:data:api"))
+    implementation(project(":core:utils"))
+    implementation(project(":core:ui"))
+    implementation(project(":features:transactions"))
     implementation(project(":features:account"))
-    implementation(project(":features:incomes"))
-    implementation(project(":features:expenses"))
     implementation(project(":features:categories"))
     implementation(project(":features:settings"))
-    implementation(project(":features:history"))
-    implementation(project(":transactiondata"))
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)

@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import com.abrosimov.ui.composableFunctions.CustomListItem
 
 @Composable
-fun CommentEditItem(comment: String, onClick: () -> (Unit)) {
+fun CommentEditItem(comment: String?, onClick: () -> (Unit)) {
     CustomListItem(
         leftTitle = "Комментарий",
         rightTitle = comment,

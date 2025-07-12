@@ -11,26 +11,27 @@ import androidx.compose.runtime.remember
 
 @Composable
 fun CommentInputDialog(
-    initialComment: String,
-    onSave: (String) -> Unit,
+    initialComment: String?,
+    onSave: (String?) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var comment = remember { mutableStateOf(initialComment) }
+    val commentState = remember { mutableStateOf(initialComment ?: "") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Комментарий") },
         text = {
             TextField(
-                value = comment.value,
+                value = commentState.value,
                 label = { Text("Комментарий") },
-                onValueChange = { comment.value = it },
+                onValueChange = { commentState.value = it },
                 maxLines = 4
             )
         },
         confirmButton = {
             Button(onClick = {
-                onSave(comment.value)
+                val comment = commentState.value.ifBlank { null }
+                onSave(comment)
             }) {
                 Text("OK")
             }

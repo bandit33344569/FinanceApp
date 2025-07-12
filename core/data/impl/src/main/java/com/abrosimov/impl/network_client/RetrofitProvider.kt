@@ -1,5 +1,6 @@
 package com.abrosimov.impl.network_client
 
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -17,6 +18,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitProvider {
     private lateinit var _instance: Retrofit
     val instance get() = _instance
+
+    val gson = GsonBuilder()
+        .serializeNulls()
+        .create()
 
     /**
      * Инициализирует Retrofit с настроенными параметрами.
@@ -36,7 +41,7 @@ object RetrofitProvider {
             Retrofit.Builder()
                 .baseUrl("https://shmr-finance.ru/api/v1/")
                 .client(okHttp)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
     }
 }

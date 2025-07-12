@@ -19,8 +19,21 @@ android {
         consumerProguardFiles("consumer-rules.pro")
 
         val properties = Properties()
-        properties.load(project.rootProject.file("local.properties").inputStream())
-        buildConfigField("String", "BEARER_TOKEN", "\"${properties.getProperty("BEARER_TOKEN")}\"")
+        val localPropertiesFile = project.rootProject.file("local.properties")
+
+        if (localPropertiesFile.exists()) {
+            properties.load(localPropertiesFile.inputStream())
+        } else {
+            throw GradleException("Файл local.properties не найден в корне проекта")
+        }
+
+        val bearerToken = properties.getProperty("BEARER_TOKEN", "")
+
+        if (bearerToken.isBlank()) {
+            throw GradleException("BEARER_TOKEN не задан в local.properties")
+        }
+
+        buildConfigField("String", "BEARER_TOKEN", "\"$bearerToken\"")
     }
 
     buildTypes {

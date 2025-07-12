@@ -55,7 +55,7 @@ class TransactionEditViewModel @Inject constructor(
                     val formState = TransactionFormState(
                         id = transaction.id,
                         amount = transaction.amount.toString(),
-                        comment = transaction.comment ?: "",
+                        comment = transaction.comment,
                         date = DateUtils.getDateStringFromIso(transaction.transactionDate),
                         time = DateUtils.getTimeStringFromIso(transaction.transactionDate),
                         category = transaction.category
@@ -72,7 +72,7 @@ class TransactionEditViewModel @Inject constructor(
         }
     }
 
-    fun setComment(comment: String) {
+    fun setComment(comment: String?) {
         val currentState = transactionState.value
         if (currentState is TransactionLoadState.Success) {
             transactionState.update {

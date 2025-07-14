@@ -1,11 +1,10 @@
 package com.abrosimov.financeapp.ui.navigation
 
 import androidx.navigation3.runtime.NavKey
-import com.abrosimov.core.presentation.navigation.HistoryType
-import com.abrosimov.core.presentation.viewmodel.SharedAppViewModel
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.ScreenConfig
 import com.abrosimov.financeapp.ui.navigation.screens.AccountEdit
 import com.abrosimov.financeapp.ui.navigation.screens.MainAppScreen
+import com.abrosimov.financeapp.ui.navigation.screens.TransactionEditScreen
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createAccountConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createAccountEditConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createArticlesConfig
@@ -14,6 +13,9 @@ import com.abrosimov.financeapp.ui.navigation.screensconfigs.createHistoryIncome
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createSettingConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createTodayExpensesConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createTodayIncomesConfig
+import com.abrosimov.financeapp.ui.navigation.screensconfigs.createTransactionEditScreenConfig
+import com.abrosimov.ui.navigation.HistoryType
+import com.abrosimov.ui.viewmodel.SharedAppViewModel
 
 /**
  * Возвращает конфигурацию экрана на основе текущего ключа навигации.
@@ -38,17 +40,23 @@ fun getScreenConfig(
     navigateToHistoryExpense: (() -> Unit)? = null,
     navigateToHistoryIncome: (() -> Unit)? = null,
     onNavigateToAccountEdit: (() -> Unit)? = null,
+    fabOnClick: (() -> Unit)? = null,
     navigateBack: (() -> Unit)? = null,
     sharedAppViewModel: SharedAppViewModel
 ): ScreenConfig =
     when (screen) {
-        MainAppScreen.Expenses -> createTodayExpensesConfig(navigateToHistoryExpense)
-        MainAppScreen.Income -> createTodayIncomesConfig(navigateToHistoryIncome)
+        MainAppScreen.Expenses -> createTodayExpensesConfig(navigateToHistoryExpense,fabOnClick)
+        MainAppScreen.Income -> createTodayIncomesConfig(navigateToHistoryIncome,fabOnClick)
         MainAppScreen.Settings -> createSettingConfig()
         MainAppScreen.Articles -> createArticlesConfig()
         MainAppScreen.Account -> createAccountConfig(onNavigateToAccountEdit)
         HistoryType.Income -> createHistoryIncomesConfig(navigateBack)
         HistoryType.Expenses -> createHistoryExpensesConfig(navigateBack)
+        is TransactionEditScreen -> createTransactionEditScreenConfig(
+            onCancelClick = navigateBack,
+            onOkClick = navigateBack,
+            sharedAppViewModel = sharedAppViewModel
+        )
 
         AccountEdit -> createAccountEditConfig(
             onCancelClick = navigateBack,

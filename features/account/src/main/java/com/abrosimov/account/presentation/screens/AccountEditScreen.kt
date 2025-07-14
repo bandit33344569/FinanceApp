@@ -15,20 +15,29 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.abrosimov.account.presentation.viewmodel.AccountViewModel
-import com.abrosimov.core.di.LocalViewModelFactory
-import com.abrosimov.core.domain.Resource
-import com.abrosimov.core.domain.models.Account
-import com.abrosimov.core.presentation.composableFunctions.CustomListItem
-import com.abrosimov.core.presentation.viewmodel.SharedAppViewModel
 import com.abrosimov.account.R
+import com.abrosimov.account.di.components.DaggerAccountComponent
+import com.abrosimov.account.di.dependencies.AccountDependenciesStore
 import com.abrosimov.account.presentation.dialogs.AccountNameDialog
 import com.abrosimov.account.presentation.dialogs.BalanceDialog
+import com.abrosimov.impl.models.Account
+import com.abrosimov.ui.composableFunctions.CustomListItem
+import com.abrosimov.ui.viewmodel.SharedAppViewModel
+import com.abrosimov.utils.models.Resource
 
 @Composable
 fun AccountEditScreen(
-    sharedAppViewModel: SharedAppViewModel,
-    accountViewModel: AccountViewModel = viewModel(factory = LocalViewModelFactory.current,key = "shared_account_viewmodel")
 ) {
+    val accountComponent =
+        remember {
+            DaggerAccountComponent
+                .builder()
+                .dependencies(accountDependencies = AccountDependenciesStore.accountDependencies)
+                .build()
+        }
+    val accountViewModel = viewModel<AccountViewModel>(factory = accountComponent.accountViewModelFactory)
+    val sharedAppViewModel = viewModel<SharedAppViewModel>(factory = accountComponent.sharedAppViewModelFactory())
+
     var showNameDialog = remember { mutableStateOf(false) }
     var showBalanceDialog = remember { mutableStateOf(false) }
 

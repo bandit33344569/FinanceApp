@@ -5,7 +5,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.ui.res.painterResource
 import com.abrosimov.financeapp.R
 
-fun createTodayIncomesConfig(navigateToHistoryIncome: (() -> Unit)?): ScreenConfig {
+fun createTodayIncomesConfig(
+    navigateToHistoryIncome: (() -> Unit)?,
+    fabClick: (() -> Unit)?
+): ScreenConfig {
     return ScreenConfig(
         title = "Доходы сегодня",
         navigationIcon = { },
@@ -18,6 +21,6 @@ fun createTodayIncomesConfig(navigateToHistoryIncome: (() -> Unit)?): ScreenConf
             }
         },
         fabVisibility = true,
-        fabOnClick = {},
+        fabOnClick = {fabClick?.invoke()},
     )
 }

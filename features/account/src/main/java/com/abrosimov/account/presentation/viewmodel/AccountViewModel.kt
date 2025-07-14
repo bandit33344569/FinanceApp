@@ -5,10 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.abrosimov.account.domain.usecase.GetAccountUseCase
 import com.abrosimov.account.domain.usecase.UpdateAccountUseCase
-import com.abrosimov.core.data.models.requests.AccountUpdateRequest
-import com.abrosimov.core.data.repository.CurrencyRepository
-import com.abrosimov.core.domain.Resource
-import com.abrosimov.core.domain.models.Account
+import com.abrosimov.api.models.requests.AccountUpdateRequest
+import com.abrosimov.impl.models.Account
+import com.abrosimov.impl.repository.AccountDetailsRepository
+import com.abrosimov.utils.models.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -18,17 +18,17 @@ import javax.inject.Inject
  * ViewModel для экрана, отображающего информацию о счете.
  *
  * Содержит состояние счета и предоставляет методы для его загрузки через [com.abrosimov.account.domain.usecase.GetAccountUseCase].
- * Использует [com.abrosimov.core.domain.Resource] для обработки состояний:
- * - Успех ([com.abrosimov.core.domain.Resource.Success])
- * - Ошибка ([com.abrosimov.core.domain.Resource.Error])
- * - Загрузка ([com.abrosimov.core.domain.Resource.Loading])
+ * Использует [Resource] для обработки состояний:
+ * - Успех ([Resource.Success])
+ * - Ошибка ([Resource.Error])
+ * - Загрузка ([Resource.Loading])
  *
  * @property getAccountUseCase UseCase, используемый для получения данных о счете.
  */
 class AccountViewModel @Inject constructor(
     private val getAccountUseCase: GetAccountUseCase,
     private val updateAccountUseCase: UpdateAccountUseCase,
-    private val currencyRepository: CurrencyRepository
+    private val accountDetailsRepository: AccountDetailsRepository
 ) : ViewModel() {
     init {
         Log.d("AccountViewModel", "Создан новый инстанс")
@@ -80,7 +80,8 @@ class AccountViewModel @Inject constructor(
             _accountState.value = getAccountUseCase()
             if (_accountState.value is Resource.Success) {
                 _editedAccount.value = (_accountState.value as Resource.Success<Account>).data
-                currencyRepository.setSelectedCurrency((_accountState.value as Resource.Success<Account>).data.currency)
+                accountDetailsRepository.setSelectedCurrency((_accountState.value as Resource.Success<Account>).data.currency)
+                accountDetailsRepository.setAccountId((_accountState.value as Resource.Success<Account>).data.id)
             }
         }
     }
@@ -101,7 +102,7 @@ class AccountViewModel @Inject constructor(
 
             if (_accountState.value is Resource.Success) {
                 _editedAccount.value = (_accountState.value as Resource.Success<Account>).data
-                currencyRepository.setSelectedCurrency(newCurrency)
+                accountDetailsRepository.setSelectedCurrency(newCurrency)
             }
         }
     }

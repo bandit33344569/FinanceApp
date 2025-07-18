@@ -12,10 +12,8 @@ package com.abrosimov.transactions.expenses.domain.models
  *
  * @property expenses Список всех расходов за период.
  * @property totalAmount Общая сумма всех расходов.
- * @property currency Валюта, в которой отображаются суммы (по умолчанию "₽").
  */
 data class ExpensesSummary(
     val expenses: List<Expense>,
     val totalAmount: Double,
-    val currency: String = "₽"
 )

@@ -10,12 +10,11 @@ package com.abrosimov.impl.models
  */
 data class SpecTransaction(
     val id: Int,
-    val accountId: Int,
     val amount: String,
     val transactionDate: String,
     val comment: String?,
     val createdAt: String,
     val updatedAt: String,
     val category: Category,
-    val currency: String,
 )
+

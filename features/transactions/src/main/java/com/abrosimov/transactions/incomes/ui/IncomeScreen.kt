@@ -51,7 +51,8 @@ fun IncomeScreen(
                 LazyColumn {
                     items(incomes) { income ->
                         IncomeListItem(
-                            income,
+                            income = income,
+                            currency = currency,
                             onDetailClick = { onTransactionClick(income.id) }
                         )
                         HorizontalDivider()

@@ -98,10 +98,6 @@ object DateUtils {
         return Date.from(zonedDateTime.toInstant())
     }
 
-    // Дата -> человекочитаемый вид
-    fun dateToDisplayString(date: Date): String {
-        return displayFormat.format(date)
-    }
 
     // Текущая дата в ISO формате
     fun nowIsoString(): String {
@@ -189,5 +185,33 @@ object DateUtils {
         val parts = this.split(":")
         if (parts.size != 2) return this
         return "${parts[0].padStart(2, '0')}:${parts[1].padStart(2, '0')}"
+    }
+
+    /**
+     * Преобразует Date в timestamp (миллисекунды с 1970)
+     */
+    fun dateToTimestamp(date: Date): Long {
+        return date.time
+    }
+
+    fun isServerDateNewer(serverDate: String, localDate: String): Boolean {
+        val serverTime = isoStringToTimestamp(serverDate)
+        val localTime = isoStringToTimestamp(localDate)
+        return serverTime > localTime
+    }
+
+    // Преобразует ISO-строку в timestamp
+    fun isoStringToTimestamp(isoString: String): Long {
+        return try {
+            val zonedDateTime = java.time.ZonedDateTime.parse(isoString)
+            zonedDateTime.toInstant().toEpochMilli()
+        } catch (e: Exception) {
+            0L
+        }
+    }
+
+    // Получает текущую дату в ISO формате
+    fun getCurrentIsoDate(): String {
+        return nowIsoString()
     }
 }

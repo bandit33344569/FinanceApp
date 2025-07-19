@@ -10,5 +10,4 @@ data class Expense(
     val data: String,
     val amount: String,
     val iconTag: String,
-    val currency: String
 )

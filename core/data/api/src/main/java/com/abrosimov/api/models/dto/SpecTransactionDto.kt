@@ -16,6 +16,5 @@ data class SpecTransactionDto(
     val createdAt: String,
     val updatedAt: String,
     val category: CategoryDto,
-    val currency: String,
 ) {
 }

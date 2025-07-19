@@ -101,6 +101,7 @@ fun HistoryScreen(
                             items(summary.incomes) { income ->
                                 HistoryIncomeListItem(
                                     income = income,
+                                    currency = currency,
                                     onClick = { onTransactionClick(income.id)
                                         Log.d("HistoryItemClicked", "clicked ${income.id}")})
                                 HorizontalDivider()
@@ -122,6 +123,7 @@ fun HistoryScreen(
                             items(summary.expenses) { expense ->
                                 HistoryExpenseListItem(
                                     expense = expense,
+                                    currency = currency,
                                     onClick = {
                                         onTransactionClick(expense.id)
                                     })

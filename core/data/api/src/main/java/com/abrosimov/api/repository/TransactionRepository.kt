@@ -1,8 +1,9 @@
 package com.abrosimov.api.repository
 
+import com.abrosimov.api.models.dbo.TransactionEntity
+import com.abrosimov.api.models.dto.SpecTransactionDto
 import com.abrosimov.api.models.dto.TransactionDto
 import com.abrosimov.api.models.requests.TransactionRequest
-import com.abrosimov.api.models.responses.TransactionResponse
 import com.abrosimov.utils.models.Resource
 
 interface TransactionRepository {
@@ -10,16 +11,16 @@ interface TransactionRepository {
         accountId: Int,
         startDate: String? = null,
         endDate: String? = null,
-    ): Resource<List<TransactionResponse>>
+    ): Resource<List<SpecTransactionDto>>
 
     suspend fun getTransactionById(
         transactionId: Int
-    ): Resource<TransactionResponse>
+    ): Resource<SpecTransactionDto>
 
     suspend fun updateTransaction(
         transactionId: Int,
         transactionRequest: TransactionRequest
-    ): Resource<TransactionResponse>
+    ): Resource<SpecTransactionDto>
 
     suspend fun deleteTransaction(
         transactionId: Int
@@ -29,4 +30,5 @@ interface TransactionRepository {
         transactionRequest: TransactionRequest
     ): Resource<TransactionDto>
 
+    suspend fun getLocalChanges(): Resource<List<TransactionEntity>>
 }

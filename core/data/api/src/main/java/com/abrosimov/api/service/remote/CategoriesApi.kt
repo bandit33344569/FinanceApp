@@ -1,4 +1,4 @@
-package com.abrosimov.api.service
+package com.abrosimov.api.service.remote
 
 import com.abrosimov.api.models.dto.CategoryDto
 import retrofit2.Response

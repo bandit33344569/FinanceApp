@@ -34,8 +34,8 @@ class GetTodayIncomesUseCase @Inject constructor(
         endDate: String? = null
     ): Resource<IncomesSummary> {
         val now = DateUtils.today()
-        val defaultStartDate = DateUtils.dateToServerFormat(DateUtils.getStartOfDay(now))
-        val defaultEndDate = DateUtils.dateToServerFormat(DateUtils.getEndOfDay(now))
+        val defaultStartDate = DateUtils.dateToIsoString(DateUtils.getStartOfDay(now))
+        val defaultEndDate = DateUtils.dateToIsoString(DateUtils.getEndOfDay(now))
 
         return transactionRepository.getTransactionFromPeriod(
             accountId,
@@ -45,11 +45,9 @@ class GetTodayIncomesUseCase @Inject constructor(
             val filteredAndMapped = transactions.map { it.toDomain() }
                 .filter { it.category.isIncome }
                 .map { it.toIncome() }
-
-            val currency = filteredAndMapped.firstOrNull()?.currency ?: "₽"
             val totalAmount = filteredAndMapped.sumOf { it.amount.toDouble() }
 
-            IncomesSummary(filteredAndMapped, totalAmount, currency)
+            IncomesSummary(filteredAndMapped, totalAmount)
         }
     }
 }

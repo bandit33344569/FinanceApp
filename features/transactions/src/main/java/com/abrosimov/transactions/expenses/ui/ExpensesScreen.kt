@@ -55,6 +55,7 @@ fun ExpensesScreen(
                     items(expenses) { expense ->
                         ExpenseListItem(
                             expense = expense,
+                            currency = currency,
                             onClick = {
                                 onTransactionClick(expense.id)
                                 Log.d("ExpenseListItem", "clicked ${expense.id}")

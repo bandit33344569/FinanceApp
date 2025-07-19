@@ -12,10 +12,8 @@ package com.abrosimov.transactions.incomes.domain.models
  *
  * @property incomes Список всех доходов за период.
  * @property totalAmount Общая сумма всех доходов.
- * @property currency Валюта, в которой отображаются суммы (по умолчанию "₽").
  */
 data class IncomesSummary(
     val incomes: List<Income>,
     val totalAmount: Double,
-    val currency: String = "₽"
 )

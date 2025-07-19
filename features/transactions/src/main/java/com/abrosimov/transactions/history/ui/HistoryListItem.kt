@@ -11,12 +11,13 @@ import com.abrosimov.transactions.R
 @Composable
 fun HistoryExpenseListItem(
     expense: Expense,
+    currency: String,
     onClick: () -> (Unit) = {}
 ) {
     CustomListItem(
         leftTitle = expense.title,
         leftSubtitle = expense.subtitle,
-        rightTitle = expense.amount + " " + expense.currency,
+        rightTitle = expense.amount + " " + currency,
         rightSubtitle = DateUtils.dateToDayMonthTime(DateUtils.isoStringToDate(expense.data)),
         leftIcon = expense.iconTag,
         rightIcon = R.drawable.ic_drill_in,
@@ -29,12 +30,13 @@ fun HistoryExpenseListItem(
 
 @Composable
 fun HistoryIncomeListItem(
+    currency: String,
     income: Income,
     onClick: () -> (Unit) = {}
 ) {
     CustomListItem(
         leftTitle = income.source,
-        rightTitle = income.amount + " " + income.currency,
+        rightTitle = income.amount + " " + currency,
         rightSubtitle = DateUtils.dateToDayMonthTime(DateUtils.isoStringToDate(income.date)),
         rightIcon = R.drawable.ic_drill_in,
         listBackground = MaterialTheme.colorScheme.background,

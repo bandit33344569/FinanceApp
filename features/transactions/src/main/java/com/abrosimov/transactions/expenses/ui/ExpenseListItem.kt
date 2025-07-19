@@ -9,12 +9,13 @@ import com.abrosimov.transactions.R
 @Composable
 fun ExpenseListItem(
     expense: Expense,
+    currency: String,
     onClick: () -> (Unit) = {}
 ) {
     CustomListItem(
         leftTitle = expense.title,
         leftSubtitle = expense.subtitle,
-        rightTitle = expense.amount + " " + expense.currency,
+        rightTitle = expense.amount + " " + currency,
         leftIcon = expense.iconTag,
         rightIcon = R.drawable.ic_drill_in,
         listBackground = MaterialTheme.colorScheme.background,

@@ -12,6 +12,5 @@ fun SpecTransaction.toExpense(): Expense {
         data = transactionDate,
         amount = amount,
         iconTag = category.emoji,
-        currency = currency
     )
 }

@@ -47,5 +47,5 @@ interface TransactionDao {
     suspend fun delete(transaction: TransactionEntity)
 
     @Query("SELECT * FROM transactions WHERE localUpdatedAt > updatedAt OR serverId IS NULL")
-    fun getLocalChanges(): List<TransactionEntity>
+    suspend fun getLocalChanges(): List<TransactionEntity>
 }

@@ -27,7 +27,6 @@ class CategoriesRepositoryImpl @Inject constructor(
                 if (response.isSuccessful && response.body().orEmpty().isNotEmpty()) {
                     val remote = response.body()!!
                     val entities = remote.map { it.toEntity() }
-                    categoryDao.clear()
                     categoryDao.insertAll(entities)
                     return Resource.Success(entities.map { it.toDto() })
                 }

@@ -52,6 +52,7 @@ class TransactionRepositoryImpl @Inject constructor(
         val localEnd =
             endDate ?: DateUtils.dateToIsoString(DateUtils.getEndOfDay(DateUtils.today()))
         val localTransactions = transactionDao.getTransactionsFromPeriod(localStart, localEnd)
+        val localUnsynced = transactionDao.getLocalChanges()
 
         if (!isOnline) {
             val specDtos = localTransactions.map { transaction ->
@@ -62,7 +63,9 @@ class TransactionRepositoryImpl @Inject constructor(
         }
 
         val serverStart =
-            startDate?.let { DateUtils.getDateStringFromIso(it) } ?: DateUtils.dateToServerFormat(
+            startDate?.let {
+                DateUtils.getDateStringFromIso(it)
+            } ?: DateUtils.dateToServerFormat(
                 DateUtils.getStartOfDay(DateUtils.today())
             )
         val serverEnd =
@@ -80,7 +83,8 @@ class TransactionRepositoryImpl @Inject constructor(
                     val localId = existing?.localId ?: 0
                     dto.toEntity(localId)
                 }
-                transactionDao.upsertAll(serverTransactions)
+                transactionDao.insertAll(serverTransactions)
+                transactionDao.upsertAll(localUnsynced)
                 val updatedTransactions =
                     transactionDao.getTransactionsFromPeriod(localStart, localEnd)
 
@@ -139,7 +143,7 @@ class TransactionRepositoryImpl @Inject constructor(
                     if (existing != null) {
                         transactionDao.update(serverEntity)
                     } else {
-                        transactionDao.upsertAll(listOf(serverEntity))
+                        transactionDao.insertAll(listOf(serverEntity))
                     }
                     val updatedFromDb = transactionDao.getByLocalId(transactionId)
                         ?: return Error("Не удалось получить обновлённую транзакцию")

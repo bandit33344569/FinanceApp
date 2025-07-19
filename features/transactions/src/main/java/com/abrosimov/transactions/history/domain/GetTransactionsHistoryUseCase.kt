@@ -17,7 +17,7 @@ class GetTransactionsHistoryUseCase @Inject constructor(
         endDate: String? = null
     ): Resource<List<SpecTransaction>> {
         val now = DateUtils.today()
-        val defaultStartDate = DateUtils.dateToIsoString(DateUtils.getStartOfDay(now))
+        val defaultStartDate = DateUtils.dateToIsoString(DateUtils.getStartOfMonth(now))
         val defaultEndDate = DateUtils.dateToIsoString(DateUtils.getEndOfDay(now))
 
         return transactionRepository.getTransactionFromPeriod(

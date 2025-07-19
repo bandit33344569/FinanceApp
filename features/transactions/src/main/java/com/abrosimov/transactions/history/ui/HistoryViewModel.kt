@@ -69,8 +69,8 @@ class HistoryViewModel @Inject constructor(
     fun loadHistoryTransactions() {
         viewModelScope.launch {
             val dateRange = _dateRange.value
-            val startDateStr = DateUtils.dateToServerFormat(dateRange.start)
-            val endDateStr = DateUtils.dateToServerFormat(dateRange.end)
+            val startDateStr = DateUtils.dateToIsoString(dateRange.start)
+            val endDateStr = DateUtils.dateToIsoString(dateRange.end)
 
             _historyTransactions.value = Resource.Loading
             _historyTransactions.value =

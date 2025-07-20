@@ -4,7 +4,7 @@ import com.abrosimov.api.models.dto.AccountDto
 import com.abrosimov.api.models.dto.CategoryDto
 import com.abrosimov.api.models.dto.StatItemDto
 import com.abrosimov.api.models.dto.TransactionDto
-import com.abrosimov.api.models.responses.TransactionResponse
+import com.abrosimov.api.models.dto.responses.TransactionResponse
 import com.abrosimov.impl.models.Account
 import com.abrosimov.impl.models.Category
 import com.abrosimov.impl.models.SpecTransaction
@@ -20,7 +20,7 @@ import com.abrosimov.impl.models.Transaction
  * - [com.abrosimov.api.models.CategoryDto] → [com.abrosimov.core.domain.models.Category]
  * - [com.abrosimov.api.models.StatItemDto] → [com.abrosimov.core.domain.models.StatItem]
  * - [com.abrosimov.api.models.TransactionDto] → [com.abrosimov.core.domain.models.Transaction]
- * - [com.abrosimov.api.models.responses.TransactionResponse] → [com.abrosimov.core.domain.models.SpecTransaction]
+ * - [TransactionResponse] → [com.abrosimov.core.domain.models.SpecTransaction]
  */
 
 fun AccountDto.toDomain(): Account {

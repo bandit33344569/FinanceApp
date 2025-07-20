@@ -1,9 +1,9 @@
 package com.abrosimov.api.service.remote
 
 import com.abrosimov.api.models.dto.AccountDto
-import com.abrosimov.api.models.requests.AccountUpdateRequest
-import com.abrosimov.api.models.responses.AccountHistoryResponse
-import com.abrosimov.api.models.responses.AccountResponse
+import com.abrosimov.api.models.dto.requests.AccountUpdateRequest
+import com.abrosimov.api.models.dto.responses.AccountHistoryResponse
+import com.abrosimov.api.models.dto.responses.AccountResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

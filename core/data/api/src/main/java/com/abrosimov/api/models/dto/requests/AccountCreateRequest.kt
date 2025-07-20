@@ -1,4 +1,4 @@
-package com.abrosimov.api.models.requests
+package com.abrosimov.api.models.dto.requests
 
 data class AccountCreateRequest(
     val name: String,

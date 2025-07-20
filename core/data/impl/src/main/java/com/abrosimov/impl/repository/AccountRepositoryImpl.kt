@@ -5,7 +5,7 @@ import com.abrosimov.api.models.requests.AccountUpdateRequest
 import com.abrosimov.api.models.responses.AccountHistoryResponse
 import com.abrosimov.api.models.responses.AccountResponse
 import com.abrosimov.api.repository.AccountRepository
-import com.abrosimov.api.service.AccountApi
+import com.abrosimov.api.service.remote.AccountApi
 import com.abrosimov.impl.networkMonitor.NetworkMonitor
 import com.abrosimov.impl.safeApiCall
 import com.abrosimov.utils.models.Resource

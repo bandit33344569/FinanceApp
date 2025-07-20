@@ -4,7 +4,7 @@ import com.abrosimov.api.models.dto.TransactionDto
 import com.abrosimov.api.models.requests.TransactionRequest
 import com.abrosimov.api.models.responses.TransactionResponse
 import com.abrosimov.api.repository.TransactionRepository
-import com.abrosimov.api.service.TransactionsApi
+import com.abrosimov.api.service.remote.TransactionsApi
 import com.abrosimov.impl.networkMonitor.NetworkMonitor
 import com.abrosimov.impl.safeApiCall
 import com.abrosimov.utils.models.Resource

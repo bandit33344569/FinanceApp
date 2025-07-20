@@ -11,12 +11,3 @@ data class CategoryEntity(
     val emoji: String,
     val isIncome: Boolean
 )
-
-fun CategoryEntity.toDto(): CategoryDto{
-    return CategoryDto(
-        id = id,
-        name = name,
-        emoji = emoji,
-        isIncome = isIncome
-    )
-}

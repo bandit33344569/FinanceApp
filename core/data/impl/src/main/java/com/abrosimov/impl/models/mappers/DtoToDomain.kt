@@ -76,7 +76,5 @@ fun TransactionResponse.toDomain(): SpecTransaction {
         createdAt = createdAt,
         updatedAt = updatedAt,
         category = category.toDomain(),
-        currency = account.currency
-
     )
 }

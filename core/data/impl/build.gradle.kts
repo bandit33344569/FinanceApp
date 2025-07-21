@@ -103,6 +103,8 @@ dependencies {
     ksp("androidx.room:room-compiler:2.7.2")
     implementation("androidx.room:room-ktx:2.7.2")
 
+    implementation("androidx.work:work-runtime-ktx:2.10.2")
+
     implementation ("com.google.dagger:dagger:2.56.2")
     ksp("com.google.dagger:dagger-compiler:2.56.2")
 }

@@ -17,11 +17,9 @@ import retrofit2.Response
 import javax.inject.Inject
 
 /**
- * Реализация репозитория [AccountRepository], предоставляющая данные о счетах из сети.
+ * Реализация репозитория [AccountRepository], предоставляющая данные о счетах.
  *
- * Использует [AccountApi] для выполнения сетевых запросов и [NetworkMonitor] для проверки подключения.
- * Обрабатывает ответы от сервера с помощью [safeApiCall] и преобразует DTO в доменные модели через `toDomain()`.
- *
+ * @property accountDao DAO-интерфейс для работы с аккаунтами
  * @property api API-интерфейс для работы с аккаунтами.
  * @property networkMonitor Мониторинг состояния интернет-соединения.
  */
@@ -59,7 +57,6 @@ class AccountRepositoryImpl @Inject constructor(
                 currentAccountEntity = currentAccount
             )
             accountDao.update(updatedAccount)
-            //accountManager.saveAccount(updatedAccount)
             Resource.Success(updatedAccount.toDto())
         }
     }

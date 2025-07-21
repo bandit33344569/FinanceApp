@@ -17,5 +17,4 @@ data class SpecTransaction(
     val createdAt: String,
     val updatedAt: String,
     val category: Category,
-    val currency: String,
 )

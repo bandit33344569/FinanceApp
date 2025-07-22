@@ -1,11 +1,13 @@
 package com.abrosimov.api.service.local
 
+import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.abrosimov.api.models.dbo.TransactionEntity
 
+@Dao
 interface TransactionDao {
     @Query("SELECT * FROM transactions WHERE isDeleted = 0")
     suspend fun getAll(): List<TransactionEntity>

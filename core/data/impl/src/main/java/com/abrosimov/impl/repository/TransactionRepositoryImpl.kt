@@ -135,21 +135,22 @@ class TransactionRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun syncWithServer(): ListenableWorker.Result {
+    override suspend fun syncWithServer() {
         if (!networkMonitor.isOnline()) {
             Log.w("TransactionRepository", "No internet connection, retrying sync")
-            return ListenableWorker.Result.retry()
+            return
         }
 
-        return try {
+        try {
             val accountId = accountDao.getAccount()?.id
             if (accountId == null) {
                 Log.e("TransactionRepository", "No account found for synchronization")
-                return ListenableWorker.Result.retry()
+                return
             }
 
             // 1. Синхронизируем локально добавленные транзакции (serverId == null)
             val unsyncedNewTransactions = transactionDao.getUnsyncedNew()
+            Log.i("TransactionsRepository","unsyced transactions = $unsyncedNewTransactions")
             unsyncedNewTransactions.forEach { localTransaction ->
                 val request = localTransaction.toCreateRequest(accountId)
                 val createResult = safeApiCall(networkMonitor) {
@@ -234,10 +235,8 @@ class TransactionRepositoryImpl @Inject constructor(
                     }
                 }
             }
-            ListenableWorker.Result.success()
         } catch (e: Exception) {
             Log.e("TransactionRepository", "Sync failed: ${e.message}")
-            ListenableWorker.Result.retry()
         }
 
     }
@@ -248,8 +247,15 @@ class TransactionRepositoryImpl @Inject constructor(
         endDate: String?
     ): Resource<Unit> {
         return try {
+            val serverStart = startDate?.let {
+                if (it.contains("T")) DateUtils.getDateStringFromIso(it) else it
+            } ?: DateUtils.dateToServerFormat(DateUtils.getStartOfMonth(DateUtils.today()))
+            val serverEnd = endDate?.let {
+                if (it.contains("T")) DateUtils.getDateStringFromIso(it) else it
+            } ?: DateUtils.dateToServerFormat(DateUtils.getEndOfDay(DateUtils.today()))
+            Log.i("FetAndSaveServerTransactions","Server query: start=$serverStart, end=$serverEnd")
             val result = safeApiCall(networkMonitor) {
-                api.getTransactionsFromPeriod(accountId, startDate, endDate)
+                api.getTransactionsFromPeriod(accountId, serverStart, serverEnd)
             }
             if (result is Resource.Success && result.data.isNotEmpty()) {
                 val serverTransactions = result.data.map { serverTransaction ->

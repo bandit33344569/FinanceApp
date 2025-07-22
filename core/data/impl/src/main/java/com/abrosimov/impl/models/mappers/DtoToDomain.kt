@@ -2,6 +2,7 @@ package com.abrosimov.impl.models.mappers
 
 import com.abrosimov.api.models.dto.AccountDto
 import com.abrosimov.api.models.dto.CategoryDto
+import com.abrosimov.api.models.dto.SpecTransactionDto
 import com.abrosimov.api.models.dto.StatItemDto
 import com.abrosimov.api.models.dto.TransactionDto
 import com.abrosimov.api.models.dto.responses.TransactionResponse
@@ -56,7 +57,6 @@ fun StatItemDto.toDomain(): StatItem {
 fun TransactionDto.toDomain(): Transaction {
     return Transaction(
         id = id,
-        accountId = accountId,
         categoryId = categoryId,
         amount = amount,
         transactionDate = transactionDate,
@@ -69,12 +69,23 @@ fun TransactionDto.toDomain(): Transaction {
 fun TransactionResponse.toDomain(): SpecTransaction {
     return SpecTransaction(
         id = id,
-        accountId = account.id,
         amount = amount,
         transactionDate = transactionDate,
         comment = comment,
         createdAt = createdAt,
         updatedAt = updatedAt,
         category = category.toDomain(),
+    )
+}
+
+fun SpecTransactionDto.toDomain(): SpecTransaction{
+    return SpecTransaction(
+        id = id,
+        amount = amount,
+        transactionDate = transactionDate,
+        comment = comment,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        category = category.toDomain()
     )
 }

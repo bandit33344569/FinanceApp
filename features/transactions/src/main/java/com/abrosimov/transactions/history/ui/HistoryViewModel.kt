@@ -109,8 +109,8 @@ class HistoryViewModel @Inject constructor(
     fun loadHistoryTransactions() {
         viewModelScope.launch {
             val dateRange = _dateRange.value
-            val startDateStr = DateUtils.dateToServerFormat(dateRange.start)
-            val endDateStr = DateUtils.dateToServerFormat(dateRange.end)
+            val startDateStr = DateUtils.dateToIsoString(dateRange.start)
+            val endDateStr = DateUtils.dateToIsoString(dateRange.end)
 
             _historyTransactions.value = Resource.Loading
             _historyTransactions.value =
@@ -130,17 +130,14 @@ class HistoryViewModel @Inject constructor(
             is Resource.Error -> Resource.Error(resource.message)
             is Resource.Success -> {
                 val filteredAndMapped = resource.data
-                    .filter { it.category.isIncome == false }
+                    .filter { !it.category.isIncome }
                     .map { it.toExpense() }
                     .sortedByDescending {
                         DateUtils.isoStringToDate(it.data).time
                     }
-
-                val currency =
-                    if (filteredAndMapped.isNotEmpty()) filteredAndMapped[0].currency else "₽"
                 val totalAmount = filteredAndMapped.sumOf { it.amount.toDouble() }
 
-                Resource.Success(ExpensesSummary(filteredAndMapped, totalAmount, currency))
+                Resource.Success(ExpensesSummary(filteredAndMapped, totalAmount))
             }
         }
     }.stateIn(
@@ -161,17 +158,14 @@ class HistoryViewModel @Inject constructor(
             is Resource.Error -> Resource.Error(resource.message)
             is Resource.Success -> {
                 val filteredAndMapped = resource.data
-                    .filter { it.category.isIncome == true }
+                    .filter { it.category.isIncome }
                     .map { it.toIncome() }
                     .sortedByDescending {
                         DateUtils.isoStringToDate(it.date).time
                     }
-
-                val currency =
-                    if (filteredAndMapped.isNotEmpty()) filteredAndMapped[0].currency else "₽"
                 val totalAmount = filteredAndMapped.sumOf { it.amount.toDouble() }
 
-                Resource.Success(IncomesSummary(filteredAndMapped, totalAmount, currency))
+                Resource.Success(IncomesSummary(filteredAndMapped, totalAmount))
             }
         }
     }.stateIn(

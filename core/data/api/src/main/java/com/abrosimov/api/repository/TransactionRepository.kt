@@ -29,5 +29,5 @@ interface TransactionRepository {
         transactionRequest: TransactionRequest
     ): Resource<TransactionDto>
 
-    suspend fun syncWithServer():ListenableWorker.Result
+    suspend fun syncWithServer()
 }

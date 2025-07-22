@@ -12,10 +12,14 @@ import com.abrosimov.api.service.local.TransactionDao
 @Database(
     entities = [TransactionEntity::class, CategoryEntity::class, AccountEntity::class],
     version = 1,
-    exportSchema = true
+    exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
     abstract fun categoryDao(): CategoryDao
     abstract fun accountDao(): AccountDao
+
+    companion object {
+        const val DATABASE_NAME = "app_database"
+    }
 }

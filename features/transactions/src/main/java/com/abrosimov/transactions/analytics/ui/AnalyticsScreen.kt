@@ -1,4 +1,4 @@
-package com.abrosimov.transactions.history.ui
+package com.abrosimov.transactions.analytics.ui
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
@@ -7,49 +7,50 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.abrosimov.transactions.analytics.di.DaggerAnalyticsComponent
+import com.abrosimov.ui.navigation.AnalyticsType
+import com.abrosimov.transactions.analytics.domain.models.ExpenseAnalyticsSummary
+import com.abrosimov.transactions.analytics.domain.models.IncomeAnalyticsSummary
+import com.abrosimov.transactions.analytics.ui.items.AnalyticsHeader
+import com.abrosimov.transactions.analytics.ui.items.AnalyticsListItem
+import com.abrosimov.transactions.analytics.ui.viewModel.AnalyticsViewModel
 import com.abrosimov.transactions.di.TransactionDependenciesStore
-import com.abrosimov.transactions.expenses.domain.models.ExpensesSummary
-import com.abrosimov.transactions.history.di.DaggerHistoryComponent
-import com.abrosimov.transactions.incomes.domain.models.IncomesSummary
 import com.abrosimov.ui.composableFunctions.DatePickerModal
-import com.abrosimov.ui.navigation.HistoryType
 import com.abrosimov.utils.dateutils.DateUtils
 import com.abrosimov.utils.models.Resource
 import java.util.Date
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HistoryScreen(
-    historyType: HistoryType,
-    onTransactionClick: ((Int?) -> (Unit))
+fun AnalyticsScreen(
+    analyticsType: AnalyticsType
 ) {
-    val historyComponent = remember {
-        DaggerHistoryComponent.builder()
+    val analyticsComponent = remember {
+        DaggerAnalyticsComponent.builder()
             .dependencies(transactionsDependencies = TransactionDependenciesStore.transactionsDependencies)
             .build()
     }
-    val viewModel = viewModel<HistoryViewModel>(factory = historyComponent.historyViewModelFactory)
+    val viewModel =
+        viewModel<AnalyticsViewModel>(factory = analyticsComponent.analyticsViewModelFactory)
     LaunchedEffect(Unit) {
-        Log.d("HistoryScreen", "HistoryScreen created for $historyType")
-        viewModel.loadHistoryTransactions()
+        Log.d("AnalyticsScreen", "AnalyticsScreen created for $analyticsType")
+        viewModel.loadAnalytics()
     }
-    val state = when (historyType) {
-        HistoryType.Expenses -> viewModel.historyExpensesSummary.collectAsState()
-        HistoryType.Income -> viewModel.historyIncomesSummary.collectAsState()
+    val state = when (analyticsType) {
+        AnalyticsType.Expenses -> viewModel.expenseState.collectAsStateWithLifecycle()
+        AnalyticsType.Income -> viewModel.incomeState.collectAsStateWithLifecycle()
     }
     val currency = viewModel.getCurrency()
-    val dateRange = viewModel.dateRange.collectAsState()
+    val dateRange = viewModel.dateRange.collectAsStateWithLifecycle()
     val displayStartDate = DateUtils.dateToDayMonthTime(dateRange.value.start)
     val displayEndDate = DateUtils.dateToDayMonthTime(dateRange.value.end)
 
@@ -60,7 +61,7 @@ fun HistoryScreen(
         DatePickerModal(
             onDateSelected = {
                 viewModel.updateStartDate(Date(it ?: 0))
-                viewModel.loadHistoryTransactions()
+                viewModel.loadAnalytics()
                 showStartDatePicker.value = false
             },
             onDismiss = {
@@ -74,7 +75,7 @@ fun HistoryScreen(
         DatePickerModal(
             onDateSelected = {
                 viewModel.updateEndDate(Date(it ?: 0))
-                viewModel.loadHistoryTransactions()
+                viewModel.loadAnalytics()
                 showEndDatePicker.value = false
             },
             onDismiss = {
@@ -88,9 +89,9 @@ fun HistoryScreen(
         is Resource.Success -> {
             val summary = res.data
             when (summary) {
-                is IncomesSummary -> {
+                is ExpenseAnalyticsSummary -> {
                     Column(modifier = Modifier.fillMaxSize()) {
-                        HistoryHeader(
+                        AnalyticsHeader(
                             startDate = displayStartDate,
                             endDate = displayEndDate,
                             summary = "${summary.totalAmount} $currency",
@@ -98,21 +99,20 @@ fun HistoryScreen(
                             onEndDateClick = { showEndDatePicker.value = true }
                         )
                         LazyColumn {
-                            items(summary.incomes) { income ->
-                                HistoryIncomeListItem(
-                                    income = income,
+                            items(summary.items) {
+                                AnalyticsListItem(
                                     currency = currency,
-                                    onClick = { onTransactionClick(income.id)
-                                        Log.d("HistoryItemClicked", "clicked ${income.id}")})
+                                    categoryAnalyticsItem = it
+                                )
                                 HorizontalDivider()
                             }
                         }
                     }
                 }
 
-                is ExpensesSummary -> {
+                is IncomeAnalyticsSummary -> {
                     Column(modifier = Modifier.fillMaxSize()) {
-                        HistoryHeader(
+                        AnalyticsHeader(
                             startDate = displayStartDate,
                             endDate = displayEndDate,
                             summary = "${summary.totalAmount} $currency",
@@ -120,13 +120,11 @@ fun HistoryScreen(
                             onEndDateClick = { showEndDatePicker.value = true }
                         )
                         LazyColumn {
-                            items(summary.expenses) { expense ->
-                                HistoryExpenseListItem(
-                                    expense = expense,
+                            items(summary.items) {
+                                AnalyticsListItem(
                                     currency = currency,
-                                    onClick = {
-                                        onTransactionClick(expense.id)
-                                    })
+                                    categoryAnalyticsItem = it
+                                )
                                 HorizontalDivider()
                             }
                         }
@@ -138,7 +136,7 @@ fun HistoryScreen(
         is Resource.Error -> {
             Column {
                 Text("Ошибка: ${res.message}")
-                Button(onClick = viewModel::loadHistoryTransactions) {
+                Button(onClick = viewModel::loadAnalytics) {
                     Text("Повторить")
                 }
             }

@@ -5,12 +5,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.ui.res.painterResource
 import com.abrosimov.financeapp.R
 
-fun createHistoryIncomesConfig(
+fun createAnalyticsIncomesConfig(
     navigateBack: (() -> Unit)?,
-    navigateToAnalyticsIncomesScreen: (() -> Unit)?
 ): ScreenConfig {
     return ScreenConfig(
-        title = "Моя история",
+        title = "Аналитика",
         navigationIcon = {
             IconButton(onClick = { navigateBack?.invoke() }) {
                 Icon(
@@ -19,23 +18,15 @@ fun createHistoryIncomesConfig(
                 )
             }
         },
-        actions = {
-            IconButton(onClick = { navigateToAnalyticsIncomesScreen?.invoke() }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_analize_history),
-                    contentDescription = "анализ истории"
-                )
-            }
-        }
+        actions = {}
     )
 }
 
-fun createHistoryExpensesConfig(
+fun createAnalyticsExpensesConfig(
     navigateBack: (() -> Unit)?,
-    navigateToAnalyticsExpensesScreen: (() -> Unit)?
 ): ScreenConfig {
     return ScreenConfig(
-        title = "Моя история",
+        title = "Аналитика",
         navigationIcon = {
             IconButton(onClick = { navigateBack?.invoke() }) {
                 Icon(
@@ -44,13 +35,6 @@ fun createHistoryExpensesConfig(
                 )
             }
         },
-        actions = {
-            IconButton(onClick = { navigateToAnalyticsExpensesScreen?.invoke() }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_analize_history),
-                    contentDescription = "анализ истории"
-                )
-            }
-        }
+        actions = {}
     )
 }

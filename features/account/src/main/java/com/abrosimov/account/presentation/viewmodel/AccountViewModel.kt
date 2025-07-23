@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.abrosimov.account.domain.usecase.GetAccountUseCase
 import com.abrosimov.account.domain.usecase.UpdateAccountUseCase
-import com.abrosimov.api.models.requests.AccountUpdateRequest
+import com.abrosimov.api.models.dto.requests.AccountUpdateRequest
 import com.abrosimov.impl.models.Account
 import com.abrosimov.impl.repository.AccountDetailsRepository
 import com.abrosimov.utils.models.Resource

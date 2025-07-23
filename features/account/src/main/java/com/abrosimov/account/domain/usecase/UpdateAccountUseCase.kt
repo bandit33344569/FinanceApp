@@ -1,6 +1,6 @@
 package com.abrosimov.account.domain.usecase
 
-import com.abrosimov.api.models.requests.AccountUpdateRequest
+import com.abrosimov.api.models.dto.requests.AccountUpdateRequest
 import com.abrosimov.api.repository.AccountRepository
 import com.abrosimov.impl.models.Account
 import com.abrosimov.impl.models.mappers.toDomain

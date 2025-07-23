@@ -13,11 +13,20 @@ import java.util.TimeZone
 
 object DateUtils {
 
+
     /**
      * Формат для отображения даты в формате "11 июня 21:53"
      */
     private val dayMonthTimeFormat by lazy {
         SimpleDateFormat("d MMMM HH:mm", Locale("ru"))
+    }
+
+    fun longToIsoString(date: Long): String{
+        return dateToIsoString(Date(date))
+    }
+
+    fun isoStringToLong(string: String): Long{
+        return isoStringToDate(string).time
     }
 
     /**
@@ -98,41 +107,9 @@ object DateUtils {
         return Date.from(zonedDateTime.toInstant())
     }
 
-    // Дата -> человекочитаемый вид
-    fun dateToDisplayString(date: Date): String {
-        return displayFormat.format(date)
-    }
-
-    // Текущая дата в ISO формате
-    fun nowIsoString(): String {
-        return dateToIsoString(Date())
-    }
-
     // Сегодня как Date
     fun today(): Date {
         return Date()
-    }
-
-
-    // Формат для вывода даты в виде YYYY-MM-DD
-    private val dateOutputFormat by lazy {
-        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    }
-
-    // Формат для вывода времени в виде HH:mm
-    private val timeOutputFormat by lazy {
-        SimpleDateFormat("HH:mm", Locale.getDefault())
-    }
-
-    /**
-     * Парсит ISO-строку в объект Date.
-     */
-    fun parseIsoStringToDate(isoString: String): Date? {
-        return try {
-            isoFormat.parse(isoString)
-        } catch (e: Exception) {
-            null
-        }
     }
 
     /**
@@ -190,4 +167,6 @@ object DateUtils {
         if (parts.size != 2) return this
         return "${parts[0].padStart(2, '0')}:${parts[1].padStart(2, '0')}"
     }
+
+
 }

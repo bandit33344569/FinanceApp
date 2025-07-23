@@ -7,6 +7,8 @@ import com.abrosimov.financeapp.ui.navigation.screens.MainAppScreen
 import com.abrosimov.financeapp.ui.navigation.screens.TransactionEditScreen
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createAccountConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createAccountEditConfig
+import com.abrosimov.financeapp.ui.navigation.screensconfigs.createAnalyticsExpensesConfig
+import com.abrosimov.financeapp.ui.navigation.screensconfigs.createAnalyticsIncomesConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createArticlesConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createHistoryExpensesConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createHistoryIncomesConfig
@@ -14,6 +16,7 @@ import com.abrosimov.financeapp.ui.navigation.screensconfigs.createSettingConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createTodayExpensesConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createTodayIncomesConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createTransactionEditScreenConfig
+import com.abrosimov.ui.navigation.AnalyticsType
 import com.abrosimov.ui.navigation.HistoryType
 import com.abrosimov.ui.viewmodel.SharedAppViewModel
 
@@ -39,19 +42,32 @@ fun getScreenConfig(
     screen: NavKey,
     navigateToHistoryExpense: (() -> Unit)? = null,
     navigateToHistoryIncome: (() -> Unit)? = null,
+    navigateToAnalyticsExpense: (() -> Unit)? = null,
+    navigateToAnalyticsIncome: (() -> Unit)? = null,
     onNavigateToAccountEdit: (() -> Unit)? = null,
     fabOnClick: (() -> Unit)? = null,
     navigateBack: (() -> Unit)? = null,
     sharedAppViewModel: SharedAppViewModel
 ): ScreenConfig =
     when (screen) {
-        MainAppScreen.Expenses -> createTodayExpensesConfig(navigateToHistoryExpense,fabOnClick)
-        MainAppScreen.Income -> createTodayIncomesConfig(navigateToHistoryIncome,fabOnClick)
+        MainAppScreen.Expenses -> createTodayExpensesConfig(navigateToHistoryExpense, fabOnClick)
+        MainAppScreen.Income -> createTodayIncomesConfig(navigateToHistoryIncome, fabOnClick)
         MainAppScreen.Settings -> createSettingConfig()
         MainAppScreen.Articles -> createArticlesConfig()
         MainAppScreen.Account -> createAccountConfig(onNavigateToAccountEdit)
-        HistoryType.Income -> createHistoryIncomesConfig(navigateBack)
-        HistoryType.Expenses -> createHistoryExpensesConfig(navigateBack)
+        HistoryType.Income -> createHistoryIncomesConfig(
+            navigateBack,
+            navigateToAnalyticsIncomesScreen = navigateToAnalyticsIncome
+        )
+
+        HistoryType.Expenses -> createHistoryExpensesConfig(
+            navigateBack,
+            navigateToAnalyticsExpensesScreen = navigateToAnalyticsExpense
+        )
+
+        AnalyticsType.Income -> createAnalyticsIncomesConfig(navigateBack)
+        AnalyticsType.Expenses -> createAnalyticsExpensesConfig(navigateBack)
+
         is TransactionEditScreen -> createTransactionEditScreenConfig(
             onCancelClick = navigateBack,
             onOkClick = navigateBack,

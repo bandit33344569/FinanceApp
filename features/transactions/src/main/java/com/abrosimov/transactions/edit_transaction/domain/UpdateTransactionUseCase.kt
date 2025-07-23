@@ -1,6 +1,6 @@
 package com.abrosimov.transactions.edit_transaction.domain
 
-import com.abrosimov.api.models.requests.TransactionRequest
+import com.abrosimov.api.models.dto.requests.TransactionRequest
 import com.abrosimov.api.repository.TransactionRepository
 import com.abrosimov.impl.models.SpecTransaction
 import com.abrosimov.impl.models.mappers.toDomain

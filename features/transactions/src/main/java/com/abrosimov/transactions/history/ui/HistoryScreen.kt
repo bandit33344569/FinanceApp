@@ -53,8 +53,8 @@ fun HistoryScreen(
     val displayStartDate = DateUtils.dateToDayMonthTime(dateRange.value.start)
     val displayEndDate = DateUtils.dateToDayMonthTime(dateRange.value.end)
 
-    var showStartDatePicker = rememberSaveable { mutableStateOf(false) }
-    var showEndDatePicker = rememberSaveable { mutableStateOf(false) }
+    val showStartDatePicker = rememberSaveable { mutableStateOf(false) }
+    val showEndDatePicker = rememberSaveable { mutableStateOf(false) }
 
     if (showStartDatePicker.value) {
         DatePickerModal(
@@ -101,6 +101,7 @@ fun HistoryScreen(
                             items(summary.incomes) { income ->
                                 HistoryIncomeListItem(
                                     income = income,
+                                    currency = currency,
                                     onClick = { onTransactionClick(income.id)
                                         Log.d("HistoryItemClicked", "clicked ${income.id}")})
                                 HorizontalDivider()
@@ -122,6 +123,7 @@ fun HistoryScreen(
                             items(summary.expenses) { expense ->
                                 HistoryExpenseListItem(
                                     expense = expense,
+                                    currency = currency,
                                     onClick = {
                                         onTransactionClick(expense.id)
                                     })

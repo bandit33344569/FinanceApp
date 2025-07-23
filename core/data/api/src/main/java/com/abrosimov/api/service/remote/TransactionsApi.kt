@@ -1,8 +1,8 @@
-package com.abrosimov.api.service
+package com.abrosimov.api.service.remote
 
 import com.abrosimov.api.models.dto.TransactionDto
-import com.abrosimov.api.models.requests.TransactionRequest
-import com.abrosimov.api.models.responses.TransactionResponse
+import com.abrosimov.api.models.dto.requests.TransactionRequest
+import com.abrosimov.api.models.dto.responses.TransactionResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

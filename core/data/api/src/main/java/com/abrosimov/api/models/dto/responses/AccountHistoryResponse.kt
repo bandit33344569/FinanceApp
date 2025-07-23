@@ -1,4 +1,4 @@
-package com.abrosimov.api.models.responses
+package com.abrosimov.api.models.dto.responses
 
 import com.abrosimov.api.models.dto.AccountHistoryDto
 

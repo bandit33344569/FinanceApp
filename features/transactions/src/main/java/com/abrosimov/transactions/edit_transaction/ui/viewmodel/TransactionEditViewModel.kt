@@ -2,7 +2,7 @@ package com.abrosimov.transactions.edit_transaction.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.abrosimov.api.models.requests.TransactionRequest
+import com.abrosimov.api.models.dto.requests.TransactionRequest
 import com.abrosimov.impl.models.Category
 import com.abrosimov.impl.repository.AccountDetailsRepository
 import com.abrosimov.transactions.edit_transaction.domain.CreateTransactionUseCase

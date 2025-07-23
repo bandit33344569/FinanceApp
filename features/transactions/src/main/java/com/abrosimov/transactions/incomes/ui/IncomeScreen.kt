@@ -52,6 +52,7 @@ fun IncomeScreen(
                     items(incomes) { income ->
                         IncomeListItem(
                             income,
+                            currency = currency,
                             onDetailClick = { onTransactionClick(income.id) }
                         )
                         HorizontalDivider()

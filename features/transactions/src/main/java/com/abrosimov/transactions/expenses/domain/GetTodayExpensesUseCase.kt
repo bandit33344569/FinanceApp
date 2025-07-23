@@ -28,8 +28,8 @@ class GetTodayExpensesUseCase @Inject constructor(
         endDate: String? = null
     ): Resource<ExpensesSummary> {
         val now = DateUtils.today()
-        val defaultStartDate = DateUtils.dateToServerFormat(DateUtils.getStartOfDay(now))
-        val defaultEndDate = DateUtils.dateToServerFormat(DateUtils.getEndOfDay(now))
+        val defaultStartDate = DateUtils.dateToIsoString(DateUtils.getStartOfDay(now))
+        val defaultEndDate = DateUtils.dateToIsoString(DateUtils.getEndOfDay(now))
 
         return transactionRepository.getTransactionFromPeriod(
             accountId,
@@ -39,10 +39,8 @@ class GetTodayExpensesUseCase @Inject constructor(
             val filteredAndMapped = transactions.map { it.toDomain() }
                 .filter { !it.category.isIncome }
                 .map { it.toExpense() }
-            val currency = filteredAndMapped.firstOrNull()?.currency ?: "₽"
             val totalAmount = filteredAndMapped.sumOf { it.amount.toDouble() }
-
-            ExpensesSummary(filteredAndMapped, totalAmount, currency)
+            ExpensesSummary(filteredAndMapped, totalAmount)
         }
     }
 

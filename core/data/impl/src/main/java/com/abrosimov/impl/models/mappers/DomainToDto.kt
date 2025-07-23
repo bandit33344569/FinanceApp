@@ -84,7 +84,6 @@ fun StatItem.toDto(): StatItemDto {
 fun Transaction.toDto(): TransactionDto {
     return TransactionDto(
         id = id,
-        accountId = accountId,
         categoryId = categoryId,
         amount = amount,
         transactionDate = transactionDate,

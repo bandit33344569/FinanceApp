@@ -8,11 +8,12 @@ import com.abrosimov.transactions.R
 @Composable
 fun IncomeListItem(
     income: Income,
-    onDetailClick: () -> (Unit) = {}
+    onDetailClick: () -> (Unit) = {},
+    currency: String
 ){
     CustomListItem(
         leftTitle = income.source,
-        rightTitle = income.amount + " " + income.currency,
+        rightTitle = income.amount + " " + currency,
         rightIcon = R.drawable.ic_drill_in,
         listBackground = MaterialTheme.colorScheme.background,
         leftIconBackground = MaterialTheme.colorScheme.secondary,

@@ -1,5 +1,6 @@
 package com.abrosimov.financeapp.ui.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -30,10 +31,12 @@ import com.abrosimov.financeapp.ui.navigation.screens.AccountEdit
 import com.abrosimov.financeapp.ui.navigation.screens.MainAppScreen
 import com.abrosimov.financeapp.ui.navigation.screens.TransactionEditScreen
 import com.abrosimov.settings.presentation.SettingsScreen
+import com.abrosimov.transactions.analytics.ui.AnalyticsScreen
 import com.abrosimov.transactions.expenses.ui.ExpensesScreen
 import com.abrosimov.transactions.history.ui.HistoryScreen
 import com.abrosimov.transactions.incomes.ui.IncomeScreen
 import com.abrosimov.ui.di.DaggerSharedViewModelComponent
+import com.abrosimov.ui.navigation.AnalyticsType
 import com.abrosimov.ui.navigation.HistoryType
 import com.abrosimov.ui.viewmodel.SharedAppViewModel
 
@@ -62,7 +65,16 @@ fun NavigationRoot() {
         is HistoryType -> getScreenConfig(
             currentScreen,
             sharedAppViewModel = sharedAppViewModel,
-            navigateBack = { backStack.removeLastOrNull() })
+            navigateBack = { backStack.removeLastOrNull() },
+            navigateToAnalyticsIncome = {
+                Log.d("Navigation", "Переход в аналитику доходов")
+                backStack.add(AnalyticsType.Income)
+            },
+            navigateToAnalyticsExpense = {
+                Log.d("Navigation", "Переход в аналитику расходов")
+                backStack.add(AnalyticsType.Expenses)
+            },
+        )
 
         else -> getScreenConfig(
             currentScreen,
@@ -161,6 +173,14 @@ fun NavigationRoot() {
                             backStack.add(TransactionEditScreen(transactionId))
                         }
                     )
+                }
+
+                entry<AnalyticsType.Expenses> {
+                    AnalyticsScreen(AnalyticsType.Expenses)
+                }
+
+                entry<AnalyticsType.Income> {
+                    AnalyticsScreen(AnalyticsType.Income)
                 }
                 entry<AccountEdit> {
                     AccountEditScreen()

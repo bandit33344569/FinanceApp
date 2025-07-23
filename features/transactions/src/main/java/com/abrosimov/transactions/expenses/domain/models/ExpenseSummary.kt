@@ -17,5 +17,4 @@ package com.abrosimov.transactions.expenses.domain.models
 data class ExpensesSummary(
     val expenses: List<Expense>,
     val totalAmount: Double,
-    val currency: String = "₽"
 )

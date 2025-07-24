@@ -1,17 +1,15 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.jetbrains.kotlin.serialization)
-    id("com.google.devtools.ksp") version "2.1.21-2.0.1"
     alias(libs.plugins.kotlin.compose)
 }
 
 android {
-    namespace = "com.abrosimov.account"
+    namespace = "com.abrosimov.graphics"
     compileSdk = 36
 
     defaultConfig {
-        minSdk = 26
+        minSdk = 24
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -36,11 +34,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:ui:graphics"))
-    implementation(project(":core:data:api"))
-    implementation(project(":core:data:impl"))
-    implementation(project(":core:ui"))
-    implementation(project(":core:utils"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -51,7 +44,6 @@ dependencies {
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
-
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -74,7 +66,4 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.3.2")
     implementation("androidx.compose.material3:material3-window-size-class:1.3.2")
     implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.4.0-alpha15")
-
-    implementation ("com.google.dagger:dagger:2.56.2")
-    ksp("com.google.dagger:dagger-compiler:2.56.2")
 }

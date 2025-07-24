@@ -4,8 +4,11 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.abrosimov.account.domain.usecase.GetAccountUseCase
+import com.abrosimov.account.domain.usecase.GetDataForChartUseCase
 import com.abrosimov.account.domain.usecase.UpdateAccountUseCase
 import com.abrosimov.api.models.dto.requests.AccountUpdateRequest
+import com.abrosimov.api.repository.TransactionRepository
+import com.abrosimov.gpaphics.month_chart.models.ChartData
 import com.abrosimov.impl.models.Account
 import com.abrosimov.impl.repository.AccountDetailsRepository
 import com.abrosimov.utils.models.Resource
@@ -28,7 +31,8 @@ import javax.inject.Inject
 class AccountViewModel @Inject constructor(
     private val getAccountUseCase: GetAccountUseCase,
     private val updateAccountUseCase: UpdateAccountUseCase,
-    private val accountDetailsRepository: AccountDetailsRepository
+    private val accountDetailsRepository: AccountDetailsRepository,
+    private val getDataForChartUseCase: GetDataForChartUseCase
 ) : ViewModel() {
     init {
         Log.d("AccountViewModel", "Создан новый инстанс")
@@ -39,6 +43,9 @@ class AccountViewModel @Inject constructor(
 
     private val _editedAccount = MutableStateFlow<Account?>(null)
     val editedAccount: StateFlow<Account?> = _editedAccount
+
+    private val _chartDataState = MutableStateFlow<Resource<ChartData>>(Resource.Loading)
+    val chartDataState: StateFlow<Resource<ChartData>> = _chartDataState
 
     fun updateAccountName(newName: String) {
         Log.d("AccountViewModel", "Updating name to $newName")
@@ -77,11 +84,20 @@ class AccountViewModel @Inject constructor(
     fun loadAccount() {
         viewModelScope.launch {
             _accountState.value = Resource.Loading
-            _accountState.value = getAccountUseCase()
-            if (_accountState.value is Resource.Success) {
-                _editedAccount.value = (_accountState.value as Resource.Success<Account>).data
-                accountDetailsRepository.setSelectedCurrency((_accountState.value as Resource.Success<Account>).data.currency)
-                accountDetailsRepository.setAccountId((_accountState.value as Resource.Success<Account>).data.id)
+            val accountResult = getAccountUseCase()
+            _accountState.value = accountResult
+            when (accountResult) {
+                is Resource.Success -> {
+                    val account = accountResult.data
+                    _editedAccount.value = account
+                    accountDetailsRepository.setSelectedCurrency(account.currency)
+                    accountDetailsRepository.setAccountId(account.id)
+                    _chartDataState.value = Resource.Loading
+                    _chartDataState.value = getDataForChartUseCase(account.id)
+                }
+                else -> {
+                    _chartDataState.value = Resource.Error("Не удалось загрузить данные счета")
+                }
             }
         }
     }

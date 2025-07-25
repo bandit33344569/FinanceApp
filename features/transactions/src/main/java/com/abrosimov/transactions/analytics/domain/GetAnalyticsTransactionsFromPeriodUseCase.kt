@@ -5,8 +5,7 @@ import com.abrosimov.api.repository.TransactionRepository
 import com.abrosimov.impl.repository.AccountDetailsRepository
 import com.abrosimov.transactions.analytics.domain.models.AnalyticsSummary
 import com.abrosimov.transactions.analytics.domain.models.CategoryAnalyticsItem
-import com.abrosimov.transactions.analytics.domain.models.ExpenseAnalyticsSummary
-import com.abrosimov.transactions.analytics.domain.models.IncomeAnalyticsSummary
+import com.abrosimov.ui.navigation.AnalyticsType
 import com.abrosimov.utils.models.Resource
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -17,36 +16,23 @@ class GetAnalyticsTransactionsFromPeriodUseCase @Inject constructor(
     private val transactionRepository: TransactionRepository,
     private val accountDetailsRepository: AccountDetailsRepository
 ) {
-    suspend fun getIncomeAnalytics(
+    suspend fun getAnalytics(
+        analyticsType: AnalyticsType,
         startDate: String? = null,
         endDate: String? = null
-    ): Resource<IncomeAnalyticsSummary> {
+    ): Resource<AnalyticsSummary> {
         return getAnalyticsData(
-            filter = { it.category.isIncome },
+            filter = { transaction -> transaction.category.isIncome == (analyticsType == AnalyticsType.Income) },
             startDate = startDate,
-            endDate = endDate,
-            summaryFactory = ::IncomeAnalyticsSummary
+            endDate = endDate
         )
     }
 
-    suspend fun getExpenseAnalytics(
-        startDate: String? = null,
-        endDate: String? = null
-    ): Resource<ExpenseAnalyticsSummary> {
-        return getAnalyticsData(
-            filter = { !it.category.isIncome },
-            startDate = startDate,
-            endDate = endDate,
-            summaryFactory = ::ExpenseAnalyticsSummary
-        )
-    }
-
-    private suspend fun <T : AnalyticsSummary> getAnalyticsData(
+    private suspend fun getAnalyticsData(
         filter: (SpecTransactionDto) -> Boolean,
         startDate: String?,
-        endDate: String?,
-        summaryFactory: (BigDecimal, List<CategoryAnalyticsItem>) -> T
-    ): Resource<T> {
+        endDate: String?
+    ): Resource<AnalyticsSummary> {
         val accountId = accountDetailsRepository.getAccountId()
 
         return when (val result =
@@ -55,7 +41,7 @@ class GetAnalyticsTransactionsFromPeriodUseCase @Inject constructor(
                 val transactions = result.data.filter(filter)
 
                 if (transactions.isEmpty()) {
-                    return Resource.Success(summaryFactory(BigDecimal.ZERO, emptyList()))
+                    return Resource.Success(AnalyticsSummary(BigDecimal.ZERO, emptyList()))
                 }
 
                 val totalAmount = transactions
@@ -64,11 +50,9 @@ class GetAnalyticsTransactionsFromPeriodUseCase @Inject constructor(
 
                 val grouped = transactions.groupBy { it.category }
                 val items = grouped.map { (category, transactions) ->
-                    val sum =
-                        transactions.map { it.amount.toBigDecimal() }.sumOf { it }
+                    val sum = transactions.map { it.amount.toBigDecimal() }.sumOf { it }
                     val percentage = if (totalAmount > BigDecimal.ZERO) {
-                        (sum / totalAmount * BigDecimal(100)).setScale(2, RoundingMode.HALF_UP)
-                            .toDouble()
+                        (sum / totalAmount * BigDecimal(100)).toDouble()
                     } else 0.0
 
                     CategoryAnalyticsItem(
@@ -80,11 +64,41 @@ class GetAnalyticsTransactionsFromPeriodUseCase @Inject constructor(
                         isIncome = filter(transactions.first())
                     )
                 }.sortedByDescending { it.totalAmount }
-                Resource.Success(summaryFactory(totalAmount, items))
+
+                val adjustedItems = adjustPercentages(items)
+
+                Resource.Success(AnalyticsSummary(totalAmount, adjustedItems))
             }
 
             is Resource.Error -> Resource.Error(result.message)
             Resource.Loading -> Resource.Loading
+        }
+    }
+
+    private fun adjustPercentages(items: List<CategoryAnalyticsItem>): List<CategoryAnalyticsItem> {
+        if (items.isEmpty()) return items
+
+        val totalPercentage = items.sumOf { it.percentage }
+        if (totalPercentage == 0.0) return items
+        val scaleFactor = 100.0 / totalPercentage
+        val adjustedItems = items.map { item ->
+            val adjustedPercentage = if (item.percentage > 0) {
+                BigDecimal(item.percentage * scaleFactor)
+                    .setScale(2, RoundingMode.HALF_UP)
+                    .toDouble()
+            } else 0.0
+            item.copy(percentage = adjustedPercentage)
+        }
+
+        val finalSum = adjustedItems.sumOf { it.percentage }
+        return if (finalSum != 100.0 && adjustedItems.isNotEmpty()) {
+            val lastItem = adjustedItems.last()
+            val adjustedLastPercentage = (lastItem.percentage + (100.0 - finalSum))
+                .coerceAtLeast(0.0)
+                .let { BigDecimal(it).setScale(2, RoundingMode.HALF_UP).toDouble() }
+            adjustedItems.dropLast(1) + lastItem.copy(percentage = adjustedLastPercentage)
+        } else {
+            adjustedItems
         }
     }
 }

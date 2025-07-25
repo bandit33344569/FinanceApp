@@ -9,6 +9,7 @@ import com.abrosimov.impl.di.DatabaseModule
 import com.abrosimov.impl.di.NetworkModule
 import com.abrosimov.impl.di.RepositoryModule
 import com.abrosimov.impl.di.WorkerModule
+import com.abrosimov.impl.viewmodel.SettingsViewModelFactory
 import com.abrosimov.transactions.di.TransactionsDependencies
 import dagger.BindsInstance
 import dagger.Component
@@ -31,7 +32,6 @@ import javax.inject.Singleton
 )
 interface AppComponent : AccountDependencies, CategoriesDependencies, TransactionsDependencies {
     fun inject(app: FinanceApp)
-
     @Component.Builder
     interface Builder {
         @BindsInstance
@@ -39,4 +39,6 @@ interface AppComponent : AccountDependencies, CategoriesDependencies, Transactio
 
         fun build(): AppComponent
     }
+
+    fun settingsViewModelFactory(): SettingsViewModelFactory
 }

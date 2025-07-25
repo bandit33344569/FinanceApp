@@ -1,4 +1,4 @@
-package com.abrosimov.ui.theme
+package com.abrosimov.utils.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

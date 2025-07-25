@@ -58,6 +58,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
     implementation(project(":core:data:api"))
     implementation(project(":core:utils"))
     implementation(libs.androidx.core.ktx)

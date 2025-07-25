@@ -1,7 +1,6 @@
-package com.abrosimov.ui.theme
+package com.abrosimov.utils.theme
 
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -11,13 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
+private val DefaultDarkColorScheme = darkColorScheme(
     primary = GreenPrimary,
     secondary = GreenSecondary,
-    tertiary = Tertiary
+    tertiary = Tertiary,
+    onSurface = Color(0xFFFFFFFF),
 )
 
-private val LightColorScheme = lightColorScheme(
+private val DefaultLightColorScheme = lightColorScheme(
     primary = GreenPrimary,
     secondary = GreenSecondary,
     tertiary = Tertiary,
@@ -35,20 +35,30 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun FinanceAppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    themeMode: ThemeMode = ThemeMode.LIGHT,
+    colorPreset: AppColor = AppColor.GREEN,
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    val isDarkTheme = when (themeMode) {
+        ThemeMode.DARK -> true
+        ThemeMode.LIGHT -> false
     }
 
+    val baseColorScheme = when {
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            val context = LocalContext.current
+            if (isDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
+        isDarkTheme -> DefaultDarkColorScheme
+        else -> DefaultLightColorScheme
+    }
+
+    val colorScheme = baseColorScheme.copy(
+        primary = colorPreset.preset.primary,
+        secondary = colorPreset.preset.secondary,
+        tertiary = colorPreset.preset.tertiary
+    )
 
     MaterialTheme(
         colorScheme = colorScheme,

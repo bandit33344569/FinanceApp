@@ -28,8 +28,11 @@ import com.abrosimov.account.presentation.screens.AccountEditScreen
 import com.abrosimov.account.presentation.screens.AccountScreen
 import com.abrosimov.categories.presentation.CategoryScreen
 import com.abrosimov.financeapp.ui.navigation.screens.AccountEdit
+import com.abrosimov.financeapp.ui.navigation.screens.ColorSelection
 import com.abrosimov.financeapp.ui.navigation.screens.MainAppScreen
 import com.abrosimov.financeapp.ui.navigation.screens.TransactionEditScreen
+import com.abrosimov.impl.viewmodel.SettingsViewModel
+import com.abrosimov.settings.presentation.ColorSelectionScreen
 import com.abrosimov.settings.presentation.SettingsScreen
 import com.abrosimov.transactions.analytics.ui.AnalyticsScreen
 import com.abrosimov.transactions.expenses.ui.ExpensesScreen
@@ -53,7 +56,7 @@ import com.abrosimov.ui.viewmodel.SharedAppViewModel
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NavigationRoot() {
+fun NavigationRoot(settingsViewModel: SettingsViewModel) {
     val sharedViewModelComponent = remember {
         DaggerSharedViewModelComponent.builder().build()
     }
@@ -155,7 +158,14 @@ fun NavigationRoot() {
                 }
 
                 entry<MainAppScreen.Settings> {
-                    SettingsScreen()
+                    SettingsScreen(
+                        viewModel = settingsViewModel,
+                        navigateToChangeColorScreen = { backStack.add(ColorSelection) }
+                    )
+                }
+
+                entry<ColorSelection>{
+                    ColorSelectionScreen(settingsViewModel)
                 }
 
                 entry<HistoryType.Expenses> {

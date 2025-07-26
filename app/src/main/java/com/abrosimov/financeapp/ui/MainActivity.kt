@@ -4,10 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.abrosimov.financeapp.ui.navigation.NavigationRoot
 import javax.inject.Inject
 import androidx.lifecycle.ViewModelProvider
-import com.abrosimov.ui.theme.FinanceAppTheme
+import com.abrosimov.impl.viewmodel.SettingsViewModel
+import com.abrosimov.utils.theme.FinanceAppTheme
 
 /**
  * Основная активность приложения, управляющая отображением UI и внедрением зависимостей.
@@ -26,6 +29,8 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    private lateinit var viewModel: SettingsViewModel
+
     /**
      * Вызывается при создании активности.
      *
@@ -37,11 +42,17 @@ class MainActivity : ComponentActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val factory = (application as FinanceApp).settingsViewModelFactory
+        viewModel = ViewModelProvider(this, factory)[SettingsViewModel::class.java]
         enableEdgeToEdge()
         setContent {
-                FinanceAppTheme {
-                    NavigationRoot(
-                    )
+            val themeMode by viewModel.themeMode.collectAsState()
+            val colorPreset by viewModel.colorPreset.collectAsState()
+                FinanceAppTheme(
+                    themeMode = themeMode,
+                    colorPreset = colorPreset
+                ) {
+                    NavigationRoot(viewModel)
                 }
         }
     }

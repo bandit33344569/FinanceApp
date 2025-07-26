@@ -36,6 +36,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:ui:graphics"))
     implementation(project(":core:data:api"))
     implementation(project(":core:data:impl"))
     implementation(project(":core:ui"))

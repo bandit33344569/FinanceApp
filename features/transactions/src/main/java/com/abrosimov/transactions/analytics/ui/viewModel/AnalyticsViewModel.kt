@@ -2,16 +2,20 @@ package com.abrosimov.transactions.analytics.ui.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.abrosimov.gpaphics.analytics_diagram.color_generator.ColorGenerator
+import com.abrosimov.gpaphics.analytics_diagram.models.AnalyticsChartData
+import com.abrosimov.gpaphics.analytics_diagram.models.AnalyticsChartItem
 import com.abrosimov.impl.repository.AccountDetailsRepository
 import com.abrosimov.transactions.analytics.domain.GetAnalyticsTransactionsFromPeriodUseCase
-import com.abrosimov.transactions.analytics.domain.models.ExpenseAnalyticsSummary
-import com.abrosimov.transactions.analytics.domain.models.IncomeAnalyticsSummary
+import com.abrosimov.transactions.analytics.domain.models.AnalyticsSummary
 import com.abrosimov.ui.models.DateRange
+import com.abrosimov.ui.navigation.AnalyticsType
 import com.abrosimov.utils.dateutils.DateUtils
 import com.abrosimov.utils.models.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -21,21 +25,41 @@ class AnalyticsViewModel @Inject constructor(
     private val getAnalyticsUseCase: GetAnalyticsTransactionsFromPeriodUseCase,
     private val accountDetailsRepository: AccountDetailsRepository
 ) : ViewModel() {
-    private val _incomeState =
-        MutableStateFlow<Resource<IncomeAnalyticsSummary>>(Resource.Loading)
-    val incomeState: StateFlow<Resource<IncomeAnalyticsSummary>> = _incomeState.asStateFlow()
+    private val _analyticsState =
+        MutableStateFlow<Resource<AnalyticsSummary>>(Resource.Loading)
+    val analyticsState: StateFlow<Resource<AnalyticsSummary>> = _analyticsState.asStateFlow()
 
-    private val _expenseState =
-        MutableStateFlow<Resource<ExpenseAnalyticsSummary>>(Resource.Loading)
-    val expenseState: StateFlow<Resource<ExpenseAnalyticsSummary>> = _expenseState.asStateFlow()
+    private val _chartData = MutableStateFlow<Resource<AnalyticsChartData>>(Resource.Loading)
+    val chartData: StateFlow<Resource<AnalyticsChartData>> = _chartData.asStateFlow()
 
-    fun loadAnalytics() {
+    init {
+        viewModelScope.launch {
+            _analyticsState.collectLatest { resource ->
+                _chartData.value = when (resource) {
+                    is Resource.Success -> {
+                        ColorGenerator.resetColors()
+                        val chartItems = resource.data.items.map { item ->
+                            AnalyticsChartItem(
+                                name = item.categoryName,
+                                percentage = item.percentage,
+                                color = ColorGenerator.getRandomColor()
+                            )
+                        }
+                        Resource.Success(AnalyticsChartData(items = chartItems))
+                    }
+                    is Resource.Error -> Resource.Error(resource.message)
+                    Resource.Loading -> Resource.Loading
+                }
+            }
+        }
+    }
+
+    fun loadAnalytics(analyticsType: AnalyticsType) {
         viewModelScope.launch {
             val dateRange = _dateRange.value
             val startDateStr = DateUtils.dateToIsoString(dateRange.start)
             val endDateStr = DateUtils.dateToIsoString(dateRange.end)
-            loadIncome(startDateStr, endDateStr)
-            loadExpense(startDateStr, endDateStr)
+            _analyticsState.value = getAnalyticsUseCase.getAnalytics(analyticsType, startDateStr, endDateStr)
         }
     }
 
@@ -60,11 +84,4 @@ class AnalyticsViewModel @Inject constructor(
         _dateRange.update { it.copy(end = date) }
     }
 
-    private fun loadIncome(startDate: String?, endDate: String?) = viewModelScope.launch {
-        _incomeState.value = getAnalyticsUseCase.getIncomeAnalytics(startDate, endDate)
-    }
-
-    private fun loadExpense(startDate: String?, endDate: String?) = viewModelScope.launch {
-        _expenseState.value = getAnalyticsUseCase.getExpenseAnalytics(startDate, endDate)
-    }
 }

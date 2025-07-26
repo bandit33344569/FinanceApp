@@ -7,7 +7,7 @@ import com.abrosimov.settings.domain.models.Setting
 import com.abrosimov.ui.composableFunctions.CustomListItem
 
 @Composable
-fun SettingLitItem(setting: Setting){
+fun SettingListItem(setting: Setting){
     CustomListItem(
         leftTitle = setting.title,
         rightIcon = R.drawable.ic_details,

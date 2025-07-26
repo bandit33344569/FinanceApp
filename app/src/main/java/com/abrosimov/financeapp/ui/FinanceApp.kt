@@ -8,6 +8,7 @@ import com.abrosimov.account.di.dependencies.AccountDependenciesStore
 import com.abrosimov.categories.di.dependencies.CategoriesDependenciesStore
 import com.abrosimov.financeapp.di.AppComponent
 import com.abrosimov.financeapp.di.DaggerAppComponent
+import com.abrosimov.impl.viewmodel.SettingsViewModelFactory
 import com.abrosimov.impl.worker.SyncScheduler
 import com.abrosimov.impl.worker.SyncWorkerFactory
 import com.abrosimov.transactions.di.TransactionDependenciesStore
@@ -24,6 +25,8 @@ class FinanceApp : Application() {
      * Компонент Dagger, предоставляющий зависимости на уровне приложения.
      */
     lateinit var appComponent: AppComponent
+    @Inject
+    lateinit var settingsViewModelFactory: SettingsViewModelFactory
     @Inject
     lateinit var workerFactory: SyncWorkerFactory
 

@@ -3,7 +3,11 @@ package com.abrosimov.account.presentation.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,11 +22,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.abrosimov.account.R
 import com.abrosimov.account.di.components.DaggerAccountComponent
 import com.abrosimov.account.di.dependencies.AccountDependenciesStore
 import com.abrosimov.account.presentation.viewmodel.AccountViewModel
+import com.abrosimov.gpaphics.month_chart.composable.BarChart
 import com.abrosimov.impl.models.Account
 import com.abrosimov.ui.composableFunctions.CustomListItem
 import com.abrosimov.utils.models.Resource
@@ -49,7 +56,8 @@ fun AccountScreen(
 fun AccountBriefUI(viewModel: AccountViewModel) {
     val modalSheetState = rememberModalBottomSheetState()
     var showBottomSheet = remember { mutableStateOf(false) }
-    val state = viewModel.accountState.collectAsState()
+    val state = viewModel.accountState.collectAsStateWithLifecycle()
+    val chartDataState = viewModel.chartDataState.collectAsStateWithLifecycle()
     when (state.value) {
         is Resource.Error -> {
             Column {
@@ -74,6 +82,28 @@ fun AccountBriefUI(viewModel: AccountViewModel) {
                     account.currency,
                     onClick = { showBottomSheet.value = true }
                 )
+                Spacer(modifier = Modifier.height(20.dp))
+                when (chartDataState.value) {
+                    is Resource.Error -> {
+                        Text("Ошибка графика: ${(chartDataState.value as Resource.Error).message}")
+                        Button(onClick = viewModel::loadAccount) {
+                            Text("Повторить")
+                        }
+                    }
+                    Resource.Loading -> {
+                        CircularProgressIndicator()
+                    }
+                    is Resource.Success -> {
+                        val chartData = (chartDataState.value as Resource.Success).data
+                        BarChart(
+                            chartData = chartData,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp)
+                                .padding(top = 16.dp)
+                        )
+                    }
+                }
             }
             if (showBottomSheet.value) {
                 ModalBottomSheet(

@@ -3,6 +3,7 @@ package com.abrosimov.financeapp.ui.navigation
 import androidx.navigation3.runtime.NavKey
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.ScreenConfig
 import com.abrosimov.financeapp.ui.navigation.screens.AccountEdit
+import com.abrosimov.financeapp.ui.navigation.screens.ColorSelection
 import com.abrosimov.financeapp.ui.navigation.screens.MainAppScreen
 import com.abrosimov.financeapp.ui.navigation.screens.TransactionEditScreen
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createAccountConfig
@@ -10,6 +11,7 @@ import com.abrosimov.financeapp.ui.navigation.screensconfigs.createAccountEditCo
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createAnalyticsExpensesConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createAnalyticsIncomesConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createArticlesConfig
+import com.abrosimov.financeapp.ui.navigation.screensconfigs.createColorSelectionScreenConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createHistoryExpensesConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createHistoryIncomesConfig
 import com.abrosimov.financeapp.ui.navigation.screensconfigs.createSettingConfig
@@ -53,6 +55,7 @@ fun getScreenConfig(
         MainAppScreen.Expenses -> createTodayExpensesConfig(navigateToHistoryExpense, fabOnClick)
         MainAppScreen.Income -> createTodayIncomesConfig(navigateToHistoryIncome, fabOnClick)
         MainAppScreen.Settings -> createSettingConfig()
+        ColorSelection -> createColorSelectionScreenConfig(navigateBack)
         MainAppScreen.Articles -> createArticlesConfig()
         MainAppScreen.Account -> createAccountConfig(onNavigateToAccountEdit)
         HistoryType.Income -> createHistoryIncomesConfig(
